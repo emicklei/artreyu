@@ -1,0 +1,5 @@
+rm -rf target \
+&& mkdir target \
+&& docker build -t typhoon-builder . \
+&& docker run --rm -v `pwd`/target:/target -t $(docker images -q | head -1) \
+&& ls -l target
