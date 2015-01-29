@@ -44,12 +44,13 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		log.Fatal("missing TYPHOON_REPO environment setting")
 	}
 	g := path.Join(strings.Split(a.group, ".")...)
-	p := path.Join(repo, g, a.version)
-	log.Printf("copying %s to %s", a.artifact, p)
+	regular := path.Base(path.Clean(a.artifact))
+	p := path.Join(repo, g, regular, a.version)
+
+	log.Printf("copying %s to %s", regular, p)
 	if err := os.MkdirAll(p, os.ModePerm); err != nil {
 		log.Fatalf("unable to create dirs: %s cause: %v", p, err)
 	}
-	regular := path.Base(path.Clean(a.artifact))
 	dest := path.Join(p, regular)
 	if !a.overwrite && Exists(dest) {
 		log.Fatalf("unable to copy artifact: %s to: %s cause: it already exists and --overwrite=false", regular, p)
