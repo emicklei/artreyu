@@ -13,6 +13,9 @@ import (
 
 // go run *.go archive --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT --force=true
 
+var VERSION string = "dev"
+var BUILDDATE string = "now"
+
 var RootCmd = &cobra.Command{
 	Use:   "typhoon",
 	Short: "typhoon a is a tool for artifact management",
@@ -50,7 +53,7 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 	regular := path.Base(path.Clean(a.artifact))
 	p := path.Join(repo, g, regular, a.version)
 
-	log.Printf("copying %s to %s", regular, p)
+	log.Printf("copying %s into folder %s", regular, p)
 	if err := os.MkdirAll(p, os.ModePerm); err != nil {
 		log.Fatalf("unable to create dirs: %s cause: %v", p, err)
 	}
@@ -70,6 +73,7 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 }
 
 func main() {
+	log.Println("_/^\\_/^\\_/^\\_ typhoon - the artifact tool [commit=", VERSION, "build=", BUILDDATE, "] _/^\\_/^\\_/^\\_")
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.Execute()
 }
