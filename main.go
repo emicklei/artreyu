@@ -4,11 +4,14 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 
 	"github.com/spf13/cobra"
 )
+
+// go run *.go archive --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT --force=true
 
 var RootCmd = &cobra.Command{
 	Use:   "typhoon",
@@ -52,10 +55,16 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to create dirs: %s cause: %v", p, err)
 	}
 	dest := path.Join(p, regular)
-	if !a.overwrite && Exists(dest) {
-		log.Fatalf("unable to copy artifact: %s to: %s cause: it already exists and --overwrite=false", regular, p)
+
+	// SNAPSHOT can be overwritten
+	if strings.HasSuffix(a.version, "SNAPSHOT") {
+		log.Println("will overwrite|create SNAPSHOT version")
+		a.overwrite = true
 	}
-	if err := Copy(dest, a.artifact); err != nil {
+	if !a.overwrite && Exists(dest) {
+		log.Fatalf("unable to copy artifact: %s to: %s cause: it already exists and --force=false", regular, p)
+	}
+	if err := Cp(dest, a.artifact); err != nil {
 		log.Fatalf("unable to copy artifact: %s to: %s cause:%v", regular, p, err)
 	}
 }
@@ -68,6 +77,10 @@ func main() {
 func Exists(dest string) bool {
 	_, err := os.Stat(dest)
 	return err == nil
+}
+
+func Cp(dst, src string) error {
+	return exec.Command("cp", src, dst).Run()
 }
 
 // Copy does what is says. Ignores errors on Close though.
