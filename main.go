@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -13,9 +15,20 @@ import (
 
 // go run *.go archive --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT
 // go run *.go fetch --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT hier
+// go run *.go list --group=com.ubanita --artifact=lucifer --version=1.0-SNAPSHOT
 
 var VERSION string = "dev"
 var BUILDDATE string = "now"
+
+func main() {
+	log.Println("_/^\\_")
+	log.Println(" | | typhoon - the artifact tool [commit=", VERSION, "build=", BUILDDATE, "]")
+	log.Println("-\\_/-")
+	RootCmd.AddCommand(newArchiveCmd())
+	RootCmd.AddCommand(newFetchCmd())
+	RootCmd.AddCommand(newListCmd())
+	RootCmd.Execute()
+}
 
 var RootCmd = &cobra.Command{
 	Use:   "typhoon",
@@ -30,6 +43,24 @@ type artifactCmd struct {
 	version  string
 }
 
+func newListCmd() *cobra.Command {
+	cmd := newArtifactCmd(&cobra.Command{
+		Use:   "list",
+		Short: "list all available artifacts from the typhoon repository",
+	})
+	cmd.Command.Run = cmd.doList
+	return cmd.Command
+}
+
+func (c *artifactCmd) doList(cmd *cobra.Command, args []string) {
+	g := path.Join(strings.Split(c.group, ".")...)
+	group := path.Join(getRepo(), g, c.artifact, c.version)
+	files, _ := ioutil.ReadDir(group)
+	for _, f := range files {
+		fmt.Println(f.Name())
+	}
+}
+
 type archiveCmd struct {
 	*artifactCmd
 	overwrite bool
@@ -39,8 +70,8 @@ func newArtifactCmd(cobraCmd *cobra.Command) *artifactCmd {
 	cmd := new(artifactCmd)
 	cmd.Command = cobraCmd
 	cmd.PersistentFlags().StringVar(&cmd.artifact, "artifact", ".", "file location of artifact to copy")
-	cmd.PersistentFlags().StringVar(&cmd.group, "group", ".", "store the articat under this group")
-	cmd.PersistentFlags().StringVar(&cmd.version, "version", ".", "store the articat under this version")
+	cmd.PersistentFlags().StringVar(&cmd.group, "group", ".", "folder containing the artifacts")
+	cmd.PersistentFlags().StringVar(&cmd.version, "version", ".", "version of the artifact")
 	return cmd
 }
 
@@ -94,7 +125,6 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 
 type fetchCmd struct {
 	*artifactCmd
-	destination string
 }
 
 func newFetchCmd() *cobra.Command {
@@ -114,20 +144,14 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		log.Fatalf("missing destination")
 	}
+	if !Exists(src) {
+		log.Fatalf("unable to copy artifact: %s because: no such artifact", src)
+	}
 	destination := args[len(args)-1]
 	log.Printf("copying %s to %s\n", src, destination)
 	if err := Cp(destination, src); err != nil {
-		log.Fatalf("unable to copy artifact: %s to: %s cause:%v", src, f.destination, err)
+		log.Fatalf("unable to copy artifact: %s to: %s because:%v", src, destination, err)
 	}
-}
-
-func main() {
-	log.Println("_/^\\_")
-	log.Println(" | | typhoon - the artifact tool [commit=", VERSION, "build=", BUILDDATE, "]")
-	log.Println("-\\_/-")
-	RootCmd.AddCommand(newArchiveCmd())
-	RootCmd.AddCommand(newFetchCmd())
-	RootCmd.Execute()
 }
 
 func Exists(dest string) bool {
