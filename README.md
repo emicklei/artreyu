@@ -1,21 +1,29 @@
+# Typhoon - artifact assembly tool
+
 ### copy an artifact
 
 ```
-typhoon archive --artifact=target/torch --version=$BUILD_ID --group=com.ubanita
+typhoon archive target/app --version=$BUILD_ID --group=com.company target\app
 ```
 in the repo
 ```
-$TYPHOON_REPO/com/ubanita/torch/2015-01-29_09-04-55/torch
+$TYPHOON_REPO/com/company/app/2015-01-29_09-04-55/app
 ```
 
 ### fetch latest artifact
 
 ```
-typhoon fetch --group=com.ubanita --artifact=torch
+typhoon fetch --group=com.company --artifact=app
 ```
 
 ### fetch specific artifact version
 
 ```
-typhoon fetch --group=com.ubanita --artifact=torch --version=v3
+typhoon fetch --group=com.company --artifact=app --version=v3
+```
+
+### list artifacts by group, version or its name
+
+```
+typhoon list --group=com.company
 ```

@@ -22,7 +22,7 @@ var BUILDDATE string = "now"
 
 func main() {
 	log.Println("_/^\\_")
-	log.Println(" | | typhoon - the artifact tool [commit=", VERSION, "build=", BUILDDATE, "]")
+	log.Println(" | | typhoon - artifact assembly tool [commit=", VERSION, "build=", BUILDDATE, "]")
 	log.Println("-\\_/-")
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.AddCommand(newFetchCmd())
