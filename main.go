@@ -43,7 +43,7 @@ func newVersionCmd() *cobra.Command {
 			log.Println(" | | typhoon - artifact assembly tool [commit=", VERSION, "build=", BUILDDATE, "]")
 			log.Println("-\\_/-")
 		},
-	})
+	}
 }
 
 type artifactCmd struct {
