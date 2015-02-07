@@ -13,10 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// go run *.go archive --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT
-// go run *.go fetch --artifact=main.go --group=com.ubanita --version=1.0-SNAPSHOT hier
-// go run *.go list --group=com.ubanita --artifact=lucifer --version=1.0-SNAPSHOT
-
 var VERSION string = "dev"
 var BUILDDATE string = "now"
 
@@ -38,7 +34,7 @@ func newVersionCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
 		Short: "show build info",
-		Run:   func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 			log.Println("_/^\\_")
 			log.Println(" | | typhoon - artifact assembly tool [commit=", VERSION, "build=", BUILDDATE, "]")
 			log.Println("-\\_/-")
@@ -109,10 +105,10 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		log.Fatalf("missing artifact")
 	}
-	a.artifact = args[len(args)-1]
+	source := args[len(args)-1]
 	g := path.Join(strings.Split(a.group, ".")...)
-	regular := path.Base(path.Clean(a.artifact))
-	p := path.Join(getRepo(), g, regular, a.version)
+	regular := path.Base(path.Clean(source))
+	p := path.Join(getRepo(), g, a.artifact, a.version)
 
 	log.Printf("copying %s into folder %s\n", regular, p)
 	if err := os.MkdirAll(p, os.ModePerm); err != nil {
@@ -126,10 +122,10 @@ func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		a.overwrite = true
 	}
 	if !a.overwrite && Exists(dest) {
-		log.Fatalf("unable to copy artifact: %s to: %s cause: it already exists and --force=false", regular, p)
+		log.Fatalf("unable to copy artifact: %s to: %s cause: it already exists and --force=false", source, p)
 	}
-	if err := Cp(dest, a.artifact); err != nil {
-		log.Fatalf("unable to copy artifact: %s to: %s cause:%v", regular, p, err)
+	if err := Cp(dest, source); err != nil {
+		log.Fatalf("unable to copy artifact: %s to: %s cause:%v", source, p, err)
 	}
 }
 
