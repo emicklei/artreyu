@@ -21,12 +21,10 @@ var VERSION string = "dev"
 var BUILDDATE string = "now"
 
 func main() {
-	log.Println("_/^\\_")
-	log.Println(" | | typhoon - artifact assembly tool [commit=", VERSION, "build=", BUILDDATE, "]")
-	log.Println("-\\_/-")
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.AddCommand(newFetchCmd())
 	RootCmd.AddCommand(newListCmd())
+	RootCmd.AddCommand(newVersionCmd())
 	RootCmd.Execute()
 }
 
@@ -34,6 +32,18 @@ var RootCmd = &cobra.Command{
 	Use:   "typhoon",
 	Short: "typhoon a is a tool for artifact management",
 	Run:   func(cmd *cobra.Command, args []string) {},
+}
+
+func newVersionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "show build info",
+		Run:   func(cmd *cobra.Command, args []string) {
+			log.Println("_/^\\_")
+			log.Println(" | | typhoon - artifact assembly tool [commit=", VERSION, "build=", BUILDDATE, "]")
+			log.Println("-\\_/-")
+		},
+	})
 }
 
 type artifactCmd struct {
