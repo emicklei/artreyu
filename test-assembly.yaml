@@ -7,7 +7,7 @@ version: 2
 parts:
 - artifact: myapp
   version: 1.0-SNAPSHOT
-  type: tgz
+  extension: tgz
 - artifact: myapp2
   version: 2.0-SNAPSHOT
-  type: tgz
+  extension: tgz

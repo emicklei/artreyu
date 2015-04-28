@@ -27,3 +27,18 @@ typhoon fetch --group=com.company --artifact=app --version=v3
 ```
 typhoon list --group=com.company
 ```
+
+
+
+
+
+### Nexus directory layout
+
+	$groupId/$artifactId/$version/$os-arch/$artifactId-$version.$extension
+	
+	com.ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz
+
+
+The build process will create the `firespark-web-1.0-SNAPSHOT.tgz` using the `typhoon.yaml`
+
+	typhoon archive firespark-web-1.0-SNAPSHOT.tgz

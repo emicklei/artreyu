@@ -7,10 +7,10 @@ type Assembly struct {
 }
 
 type Artifact struct {
-	Group   string
-	Name    string `yaml:"artifact"`
-	Version string
-	Type    string
+	Group     string
+	Name      string `yaml:"artifact"`
+	Version   string
+	Extension string
 }
 
 func (a *Assembly) PostRead() {
