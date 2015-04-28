@@ -6,7 +6,7 @@ import (
 
 	"io/ioutil"
 
-	. "github.com/emicklei/assert"
+	"github.com/emicklei/assert"
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,14 +17,16 @@ func Test_ReadYaml(t *testing.T) {
 	}
 	defer f.Close()
 
-	var d Assembly
+	d := new(Assembly)
 	data, _ := ioutil.ReadAll(f)
-	err = yaml.Unmarshal(data, &d)
+	err = yaml.Unmarshal(data, d)
 	if err != nil {
 		t.Fatal(err)
 	}
+	d.PostRead()
+
 	out, _ := yaml.Marshal(d)
 	t.Log(string(out))
 
-	Asser(t, "deps", d.Parts).Len(2)
+	assert.That(t, "deps", d.Parts).Len(2)
 }

@@ -5,9 +5,9 @@ artifact: company-linux-sdk
 version: 2
 
 parts:
-- group: com.company
-  artifact: myapp
+- artifact: myapp
   version: 1.0-SNAPSHOT
-- group: com.company
-  artifact: myapp2
+  type: tgz
+- artifact: myapp2
   version: 2.0-SNAPSHOT
+  type: tgz
