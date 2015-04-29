@@ -3,11 +3,14 @@ typhoon-api: 1
 group: com.company
 artifact: company-linux-sdk
 version: 2
+extension: tgz
 
 parts:
-- artifact: myapp
+- group: com.company
+  artifact: myapp
   version: 1.0-SNAPSHOT
   extension: tgz
-- artifact: myapp2
+- group: com.company
+  artifact: myapp2
   version: 2.0-SNAPSHOT
   extension: tgz

@@ -17,3 +17,7 @@ func New(repoEndpoint string) Client {
 func (c Client) UploadFile(srcLocation, destLocation string) error {
 	return nil
 }
+
+func (c Client) DownloadFile(srcLocation, destLocation string) error {
+	return nil
+}
