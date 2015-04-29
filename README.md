@@ -39,6 +39,8 @@ typhoon list --group=com.company
 	com.ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz
 
 
-The build process will create the `firespark-web-1.0-SNAPSHOT.tgz` using the `typhoon.yaml`
+The build process will create the `firespark-web.tgz`
 
-	typhoon archive firespark-web-1.0-SNAPSHOT.tgz
+	typhoon archive firespark-web.tgz
+
+will upload firespark-web.tgz to com/ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz using `typhoon.yaml`
