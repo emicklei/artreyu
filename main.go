@@ -1,17 +1,20 @@
 package main
 
-import (
-	"fmt"
+import "github.com/spf13/cobra"
 
-	"github.com/emicklei/typhoon/local"
-	"github.com/emicklei/typhoon/model"
-)
+var VERSION string = "dev"
+var BUILDDATE string = "now"
 
 func main() {
-	ar, _ := model.LoadArtifact("./model/test-artifact.yaml")
-	re := local.NewRepository("/tmp")
-	fmt.Println(ar, re)
+	RootCmd.AddCommand(newArchiveCmd())
+	RootCmd.AddCommand(newFetchCmd())
+	RootCmd.AddCommand(newListCmd())
+	RootCmd.AddCommand(newVersionCmd())
+	RootCmd.Execute()
+}
 
-	err := re.Store(ar, "README.md")
-	fmt.Println(err)
+var RootCmd = &cobra.Command{
+	Use:   "typhoon",
+	Short: "typhoon a is a tool for artifact management",
+	Run:   func(cmd *cobra.Command, args []string) {},
 }

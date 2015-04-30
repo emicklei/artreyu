@@ -1,4 +1,4 @@
-FROM golang:1.4.1-wheezy
+FROM golang:1.4.2-wheezy
 
 RUN go get github.com/spf13/cobra
 RUN go get github.com/emicklei/assert

@@ -1,8 +1,11 @@
 package model
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -18,6 +21,10 @@ type Artifact struct {
 	Name      string `yaml:"artifact"`
 	Version   string
 	Extension string
+}
+
+func (a Artifact) StorageLocation() string {
+	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Extension))
 }
 
 func LoadAssembly(src string) (a Assembly, e error) {

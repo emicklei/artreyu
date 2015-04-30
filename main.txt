@@ -1,0 +1,19 @@
+package main
+
+import (
+	"fmt"
+
+	"github.com/emicklei/typhoon/local"
+	"github.com/emicklei/typhoon/model"
+)
+
+func main() {
+	ar, _ := model.LoadArtifact("./model/test-artifact.yaml")
+	re := local.NewRepository("/tmp")
+
+	err := re.Store(ar, "README.md")
+	fmt.Println(err)
+
+	err = re.Fetch(ar, "target/README.back.md")
+	fmt.Println(err)
+}

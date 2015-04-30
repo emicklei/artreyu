@@ -1,6 +1,6 @@
 typhoon-api: 1
 
 group: com.company
-artifact: myapp2
+artifact: README
 version: 2.0-SNAPSHOT
-extension: tgz
+extension: md
