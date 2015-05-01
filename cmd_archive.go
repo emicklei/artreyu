@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/emicklei/typhoon/model"
+	"github.com/emicklei/typhoon/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -32,10 +34,21 @@ func getRepo() string {
 	return repo
 }
 
-func (a *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
+func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		log.Fatalf("missing artifact")
 	}
 	source := args[len(args)-1]
-	log.Println(source)
+
+	a, err := model.LoadArtifact("typhoon.yaml")
+	a.Uname = c.artifactCmd.uname
+	if err != nil {
+		log.Fatal("unable to load artifact:%v", err)
+	}
+
+	r := nexus.UserRepository
+	err = r.Store(a, source)
+	if err != nil {
+		log.Fatal("unable to store artifact:%v", err)
+	}
 }

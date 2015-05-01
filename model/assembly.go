@@ -17,14 +17,19 @@ type Assembly struct {
 }
 
 type Artifact struct {
-	Group     string
-	Name      string `yaml:"artifact"`
-	Version   string
-	Extension string
+	Group   string
+	Name    string `yaml:"artifact"`
+	Version string
+	Type    string
+	Uname   string `yaml:"-"`
 }
 
 func (a Artifact) StorageLocation() string {
-	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Extension))
+	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Type))
+}
+
+func (a Artifact) IsSnapshot() bool {
+	return strings.Index(a.Version, "SNAPSHOT") != -1
 }
 
 func LoadAssembly(src string) (a Assembly, e error) {

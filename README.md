@@ -19,8 +19,15 @@ When running the "archive" command with a file location
 
 Then the artifact is stored (uploaded) in the repo under
 	```
-	$SOME_REPO/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app.tgz
+	$SOME_REPO/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz
 	```
+
+### Directory layout
+
+	$groupId/$artifactId/$version/$os-name/$artifactId-$version.$extension
+
+
+$os-name can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...)
 
 ### Assemble a new artifact
 
@@ -51,7 +58,7 @@ When running the "fetch" command with a directory
 	typhoon fetch target
 	```
 	
-Then the artifacts are unpacked in that directory
+Then the artifacts are unpacked in directory `target`
 
 	```
 	/target
@@ -60,9 +67,3 @@ Then the artifacts are unpacked in that directory
 		ui-app.js
 		ui-app.html
 	```
-
-### Directory layout
-
-	$groupId/$artifactId/$version/$os-arch/$artifactId-$version.$extension
-	
-	com.ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz

@@ -3,4 +3,4 @@ typhoon-api: 1
 group: com.company
 artifact: README
 version: 2.0-SNAPSHOT
-extension: md
+type: md

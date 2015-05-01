@@ -7,6 +7,7 @@ type artifactCmd struct {
 	artifact string
 	group    string
 	version  string
+	uname    string
 }
 
 func newArtifactCmd(cobraCmd *cobra.Command) *artifactCmd {
@@ -15,5 +16,6 @@ func newArtifactCmd(cobraCmd *cobra.Command) *artifactCmd {
 	cmd.PersistentFlags().StringVar(&cmd.artifact, "artifact", ".", "file location of artifact to copy")
 	cmd.PersistentFlags().StringVar(&cmd.group, "group", ".", "folder containing the artifacts")
 	cmd.PersistentFlags().StringVar(&cmd.version, "version", ".", "version of the artifact")
+	cmd.PersistentFlags().StringVar(&cmd.uname, "uname", "any", "operating system name")
 	return cmd
 }
