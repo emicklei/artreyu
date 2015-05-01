@@ -1,46 +1,68 @@
 # Typhoon - artifact assembly tool
 
-### copy an artifact
+### Archive a build result
 
-```
-typhoon archive target/app --version=$BUILD_ID --group=com.company target\app
-```
-in the repo
-```
-$TYPHOON_REPO/com/company/app/2015-01-29_09-04-55/app
-```
+Given the artifact descriptor typhoon.yaml
+	```
+	typhoon-api: 1
+	
+	group: com.company
+	artifact: my-app
+	version: 1.0-SNAPSHOT
+	extension: tgz
+	```
 
-### fetch latest artifact
+When running the "archive" command with a file location
+	```
+	typhoon archive target/my-app.tgz
+	```
 
-```
-typhoon fetch --group=com.company --artifact=app
-```
+Then the artifact is stored (uploaded) in the repo under
+	```
+	$SOME_REPO/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app.tgz
+	```
 
-### fetch specific artifact version
+### Assemble a new artifact
 
-```
-typhoon fetch --group=com.company --artifact=app --version=v3
-```
+Given the artifact descriptor typhoon.yaml
 
-### list artifacts by group, version or its name
+	```
+	typhoon-api: 1
+	
+	group: com.company
+	artifact: company-linux-sdk
+	version: 2.1
+	extension: tgz
+	
+	parts:
+	- group: com.company
+	  artifact: rest-service
+	  version: 1.9
+	  extension: tgz
+	- group: com.company
+	  artifact: ui-app
+	  version: 2.1
+	  extension: tgz
+	```
 
-```
-typhoon list --group=com.company
-```
+When running the "fetch" command with a directory
 
+	```
+	typhoon fetch target
+	```
+	
+Then the artifacts are unpacked in that directory
 
+	```
+	/target
+		rest-service.exe
+		rest-service.properties
+		ui-app.js
+		ui-app.html
+	```
 
-
-
-### Nexus directory layout
+### Directory layout
 
 	$groupId/$artifactId/$version/$os-arch/$artifactId-$version.$extension
 	
 	com.ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz
-
-
-The build process will create the `firespark-web.tgz`
-
-	typhoon archive firespark-web.tgz
-
-will upload firespark-web.tgz to com/ubanita/firespark-web/1.0-SNAPSHOT/Linux/firespark-web-1.0-SNAPSHOT.tgz using `typhoon.yaml`
