@@ -1,0 +1,5 @@
+repository: 	nexus
+url:			https://here.com/nexus/content/repositories
+user: 		"!"
+password:	"*"
+osname:		Darwin

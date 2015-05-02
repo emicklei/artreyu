@@ -19,15 +19,15 @@ When running the "archive" command with a file location
 
 Then the artifact is stored (uploaded) in the repo under
 	```
-	$SOME_REPO/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz
+	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz
 	```
 
 ### Directory layout
 
-	$groupId/$artifactId/$version/$os-name/$artifactId-$version.$extension
+	$group/$artifact/$version/$osname/$artifact-$version.$type
 
 
-$os-name can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...)
+$osname can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...)
 
 ### Assemble a new artifact
 
@@ -36,34 +36,40 @@ Given the artifact descriptor typhoon.yaml
 	```
 	typhoon-api: 1
 	
-	group: com.company
-	artifact: company-linux-sdk
-	version: 2.1
-	extension: tgz
+	group: 		com.company
+	artifact: 	my-app
+	version: 	2.1
+	extension: 	tgz
 	
 	parts:
-	- group: com.company
-	  artifact: rest-service
-	  version: 1.9
-	  extension: tgz
-	- group: com.company
+	- group: 	com.company
+	  artifact:	rest-service
+	  version: 	1.9
+	  type: 	tgz
+	- group: 	com.company
 	  artifact: ui-app
-	  version: 2.1
-	  extension: tgz
+	  version: 	2.1
+	  type:		tgz
 	```
 
-When running the "fetch" command with a directory
+When running the "assemble" command with a directory
 
 	```
-	typhoon fetch target
+	typhoon assemble target
 	```
 	
-Then the artifacts are unpacked in directory `target`
+Then the parts are downloaded to directory `target`
 
 	```
 	/target
-		rest-service.exe
-		rest-service.properties
-		ui-app.js
-		ui-app.html
+		rest-service-1.9.tgz
+		ui-app-2.1.tgz
 	```
+	
+### Sample .typhoon
+
+	repository: nexus
+	url:		https://yours.com/nexus/content/repositories
+	user: 		admin
+	password:	admin
+	osname:		Darwin

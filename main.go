@@ -8,8 +8,7 @@ var BUILDDATE string = "now"
 func main() {
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.AddCommand(newFetchCmd())
-	RootCmd.AddCommand(newListCmd())
-	RootCmd.AddCommand(newVersionCmd())
+	RootCmd.AddCommand(newAssembleCmd())
 	RootCmd.Execute()
 }
 

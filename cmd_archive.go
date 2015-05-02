@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/emicklei/typhoon/model"
 	"github.com/emicklei/typhoon/nexus"
@@ -10,28 +11,20 @@ import (
 )
 
 type archiveCmd struct {
-	*artifactCmd
+	*cobra.Command
 	overwrite bool
 }
 
 func newArchiveCmd() *cobra.Command {
-	cmd := newArtifactCmd(&cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "archive [artifact]",
-		Short: "copy an artifact to the repository",
-	})
-	archiveCmd := new(archiveCmd)
-	archiveCmd.artifactCmd = cmd
-	archiveCmd.PersistentFlags().BoolVar(&archiveCmd.overwrite, "force", false, "force overwrite if version exists")
-	cmd.Command.Run = archiveCmd.doArchive
-	return cmd.Command
-}
-
-func getRepo() string {
-	repo := os.Getenv("TYPHOON_REPO")
-	if len(repo) == 0 {
-		log.Fatal("missing TYPHOON_REPO environment setting")
+		Short: "upload an artifact to the repository",
 	}
-	return repo
+	archiveCmd := new(archiveCmd)
+	archiveCmd.Command = cmd
+	archiveCmd.PersistentFlags().BoolVar(&archiveCmd.overwrite, "force", false, "force overwrite if version exists")
+	archiveCmd.Command.Run = archiveCmd.doArchive
+	return archiveCmd.Command
 }
 
 func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
@@ -40,15 +33,18 @@ func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 	}
 	source := args[len(args)-1]
 
-	a, err := model.LoadArtifact("typhoon.yaml")
-	a.Uname = c.artifactCmd.uname
+	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".typhoon"))
 	if err != nil {
-		log.Fatal("unable to load artifact:%v", err)
+		log.Fatalf("unable to load config from ~/.typhoon:%v", err)
+	}
+	a, err := model.LoadArtifact("typhoon.yaml")
+	if err != nil {
+		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.UserRepository
+	r := nexus.NewRepository(cfg)
 	err = r.Store(a, source)
 	if err != nil {
-		log.Fatal("unable to store artifact:%v", err)
+		log.Fatalf("unable to upload artifact:%v", err)
 	}
 }

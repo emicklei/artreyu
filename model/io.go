@@ -46,3 +46,39 @@ func Copy(dst, src string) error {
 	}
 	return cerr
 }
+
+func Targz(sourceDir, destinationFile string) error {
+	log.Printf("creating tape archive %s from %s\n", destinationFile, sourceDir)
+	cmd := exec.Command(
+		"tar",
+		"-czvf",
+		destinationFile,
+		"-C",
+		sourceDir,
+		".")
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Println(string(data))
+	}
+	return err
+}
+
+func Untargz(sourceFile, destinationDir string) error {
+	log.Printf("extracting tape archive %s to %s\n", sourceFile, destinationDir)
+	cmd := exec.Command(
+		"tar",
+		"-xvf",
+		sourceFile,
+		"-C",
+		destinationDir)
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Println(string(data))
+	}
+	return err
+}
+
+func FileRemove(source string) error {
+	log.Printf("removing %s\n", source)
+	return os.Remove(source)
+}

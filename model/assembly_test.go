@@ -4,16 +4,30 @@ import (
 	"testing"
 
 	"github.com/emicklei/assert"
-	"gopkg.in/yaml.v2"
 )
 
 func Test_ReadYaml(t *testing.T) {
-
 	d, err := LoadAssembly("test-assembly.yaml")
 	assert.That(t, "load err", err).IsNil()
-
-	out, _ := yaml.Marshal(d)
-	t.Log(string(out))
-
 	assert.That(t, "deps", d.Parts).Len(2)
+}
+
+func Test_LoadArtifactFromAssemblyFile(t *testing.T) {
+	a, err := LoadArtifact("test-assembly.yaml")
+	assert.That(t, "load err", err).IsNil()
+	assert.That(t, "artifact name", a.Name).Equals("company-linux-sdk")
+}
+
+func Test_LoadAssemblyFromArtifactFile(t *testing.T) {
+	a, err := LoadAssembly("test-artifact.yaml")
+	assert.That(t, "load err", err).IsNil()
+	assert.That(t, "artifact name", a.Name).Equals("README")
+}
+
+func Test_StorageLocation(t *testing.T) {
+	a, err := LoadArtifact("test-artifact.yaml")
+	assert.That(t, "load err", err).IsNil()
+
+	loc := a.StorageLocation("Darwin")
+	assert.That(t, "storage location", loc).Equals("com/company/README/2.0-SNAPSHOT/Darwin/README-2.0-SNAPSHOT.md")
 }

@@ -21,11 +21,14 @@ type Artifact struct {
 	Name    string `yaml:"artifact"`
 	Version string
 	Type    string
-	Uname   string `yaml:"-"`
 }
 
-func (a Artifact) StorageLocation() string {
-	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Type))
+func (a Artifact) StorageBase() string {
+	return fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Type)
+}
+
+func (a Artifact) StorageLocation(osname string) string {
+	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, osname, a.StorageBase())
 }
 
 func (a Artifact) IsSnapshot() bool {
