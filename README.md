@@ -3,24 +3,21 @@
 ### Archive a build result
 
 Given the artifact descriptor artreyu.yaml
-	```
+
 	api: 1
 	
 	group: com.company
 	artifact: my-app
 	version: 1.0-SNAPSHOT
 	extension: tgz
-	```
-
+	
 When running the "archive" command with a file location
-	```
-	artreyu archive target/my-app.tgz
-	```
+	
+	artreyu archive target/my-app.tgz	
 
 Then the artifact is stored (uploaded) in the repo under
-	```
-	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz
-	```
+
+	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz	
 
 ### Directory layout
 
@@ -33,7 +30,6 @@ $osname can by `any` when the artifact is not operating system dependent (e.g te
 
 Given the artifact descriptor artreyu.yaml
 
-	```
 	api: 1
 	
 	group: 		com.company
@@ -50,24 +46,19 @@ Given the artifact descriptor artreyu.yaml
 	  artifact: ui-app
 	  version: 	2.1
 	  type:		tgz
-	```
 
 When running the "assemble" command with a directory
 
-	```
 	artreyu assemble target
-	```
 	
 Then the parts are downloaded to directory `target`, the parts are extracted and all content is compressed again into a new artifact.
 
-	```
 	/target
 		my-app-2.1.tgz
 		rest-service.bin
 		rest-service.properties
 		ui-app.html
 		ui-app.js
-	```
 	
 ### Sample .artreyu in $HOME
 
