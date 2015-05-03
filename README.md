@@ -15,7 +15,7 @@ When running the "archive" command with a file location
 	
 	artreyu archive target/my-app.tgz	
 
-Then the artifact is stored (uploaded) in the repo under
+Then the artifact is uploaded to the repo under
 
 	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz	
 
@@ -24,7 +24,7 @@ Then the artifact is stored (uploaded) in the repo under
 	$group/$artifact/$version/$osname/$artifact-$version.$type
 
 
-$osname can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...)
+$osname can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...). Such artifacts will have the property `anyos` set to true. In the above example, osname is set to "Darwin" because the artreyu configuration (see below) specifies that. It can be overriden using the command flag `-osname`
 
 ### Assemble a new artifact
 
@@ -46,6 +46,7 @@ Given the artifact descriptor artreyu.yaml
 	  artifact: ui-app
 	  version: 	2.1
 	  type:		tgz
+	  anyos:    true
 
 When running the "assemble" command with a directory
 
@@ -60,7 +61,7 @@ Then the parts are downloaded to directory `target`, the parts are extracted and
 		ui-app.html
 		ui-app.js
 	
-### Sample .artreyu in $HOME
+### Sample configuration file .artreyu, stored in $HOME
 
 	repository: nexus
 	url:		https://yours.com/nexus/content/repositories
