@@ -10,11 +10,12 @@ import (
 )
 
 type Repository struct {
+	osname string
 	config model.RepositoryConfig
 }
 
-func NewRepository(config model.RepositoryConfig) Repository {
-	return Repository{config}
+func NewRepository(config model.RepositoryConfig, operatingSystemName string) Repository {
+	return Repository{operatingSystemName, config}
 }
 
 func (r Repository) Store(a model.Artifact, source string) error {
@@ -22,7 +23,7 @@ func (r Repository) Store(a model.Artifact, source string) error {
 	if a.IsSnapshot() {
 		repo = "snapshots"
 	}
-	destination := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.config.OSname()))
+	destination := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.osname))
 	log.Printf("uploading %s to %s\n", source, destination)
 	cmd := exec.Command(
 		"curl",
@@ -43,7 +44,7 @@ func (r Repository) Fetch(a model.Artifact, destination string) error {
 	if a.IsSnapshot() {
 		repo = "snapshots"
 	}
-	source := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.config.OSname()))
+	source := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.osname))
 	log.Printf("downloading %s to %s\n", source, destination)
 	cmd := exec.Command(
 		"curl",
@@ -90,7 +91,7 @@ func (r Repository) Exists(a model.Artifact) bool {
 	if a.IsSnapshot() {
 		repo = "snapshots"
 	}
-	source := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.config.OSname()))
+	source := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.osname))
 	fmt.Println(source)
 	// TODO
 	return false

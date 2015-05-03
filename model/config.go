@@ -12,7 +12,6 @@ type Config struct {
 	Repositories []RepositoryConfig
 }
 type RepositoryConfig struct {
-	parent   Config
 	URL      string
 	Path     string
 	User     string
@@ -31,10 +30,5 @@ func LoadConfig(source string) (c Config, err error) {
 	if err != nil {
 		return c, err
 	}
-	for _, each := range c.Repositories {
-		(&each).parent = c
-	}
 	return c, nil
 }
-
-func (c RepositoryConfig) OSname() string { return c.parent.OSname }

@@ -2,8 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
-	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
 	"github.com/emicklei/artreyu/nexus"
@@ -31,16 +29,12 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 	}
 	destination := args[len(args)-1]
 
-	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
-	if err != nil {
-		log.Fatalf("unable to load config from ~/.artreyu:%v", err)
-	}
 	a, err := model.LoadArtifact("artreyu.yaml")
 	if err != nil {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(cfg.Repositories[1])
+	r := nexus.NewRepository(appConfig.Repositories[1], appConfig.OSname)
 	err = r.Fetch(a, destination)
 	if err != nil {
 		log.Fatalf("unable to download artifact:%v", err)

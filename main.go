@@ -1,11 +1,26 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"log"
+	"os"
+	"path/filepath"
+
+	"github.com/emicklei/artreyu/model"
+	"github.com/spf13/cobra"
+)
 
 var VERSION string = "dev"
 var BUILDDATE string = "now"
+var appConfig model.Config
 
 func main() {
+	config, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
+	if err != nil {
+		log.Fatalf("unable to load config from ~/.artreyu:%v", err)
+	}
+	// share config
+	appConfig = config
+
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.AddCommand(newFetchCmd())
 	RootCmd.AddCommand(newAssembleCmd())

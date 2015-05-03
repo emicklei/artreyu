@@ -1,7 +1,7 @@
 osname:		Darwin
 repositories:
 - name:		local
-  path:     "/Users/emicklei/Artreyu"
+  path:     "/tmp/Artreyu"
 - name:		nexus
   url:		https://here.com/nexus
   path:     /content/repositories
