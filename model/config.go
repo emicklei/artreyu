@@ -8,11 +8,14 @@ import (
 )
 
 type Config struct {
-	Repository string
-	URL        string
-	User       string
-	Password   string
-	OSname     string
+	Servers map[string]ServerConfig
+}
+type ServerConfig struct {
+	URL      string
+	Path     string
+	User     string
+	Password string
+	OSname   string
 }
 
 func LoadConfig(source string) (c Config, err error) {

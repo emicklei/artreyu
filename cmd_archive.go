@@ -42,7 +42,7 @@ func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(cfg)
+	r := nexus.NewRepository(cfg.Servers["nexus"]) // TODO how to specify nexus
 	err = r.Store(a, source)
 	if err != nil {
 		log.Fatalf("unable to upload artifact:%v", err)

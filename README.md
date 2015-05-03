@@ -63,8 +63,12 @@ Then the parts are downloaded to directory `target`, the parts are extracted and
 	
 ### Sample configuration file .artreyu, stored in $HOME
 
-	repository: nexus
-	url:		https://yours.com/nexus/content/repositories
-	user: 		admin
-	password:	admin
-	osname:		Darwin
+	servers:
+	 nexus:
+	  url:		https://yours.com/nexus
+	  path:     /content/repositories
+	  user: 	admin
+	  password:	****
+  	  osname:	Darwin
+	 local:
+	  path:     /Users/you/artreyu

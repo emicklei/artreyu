@@ -10,10 +10,10 @@ import (
 )
 
 type Repository struct {
-	config model.Config
+	config model.ServerConfig
 }
 
-func NewRepository(config model.Config) Repository {
+func NewRepository(config model.ServerConfig) Repository {
 	return Repository{config}
 }
 
@@ -22,7 +22,7 @@ func (r Repository) Store(a model.Artifact, source string) error {
 	if a.IsSnapshot() {
 		repo = "snapshots"
 	}
-	destination := fmt.Sprintf("%s/%s/%s", r.config.URL, repo, a.StorageLocation(r.config.OSname))
+	destination := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.config.OSname))
 	log.Printf("uploading %s to %s\n", source, destination)
 	cmd := exec.Command(
 		"curl",
@@ -43,7 +43,7 @@ func (r Repository) Fetch(a model.Artifact, destination string) error {
 	if a.IsSnapshot() {
 		repo = "snapshots"
 	}
-	source := fmt.Sprintf("%s/%s/%s", r.config.URL, repo, a.StorageLocation(r.config.OSname))
+	source := r.config.URL + filepath.Join(r.config.Path, repo, a.StorageLocation(r.config.OSname))
 	log.Printf("downloading %s to %s\n", source, destination)
 	cmd := exec.Command(
 		"curl",

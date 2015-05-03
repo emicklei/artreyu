@@ -1,5 +1,9 @@
-repository: 	nexus
-url:			https://here.com/nexus/content/repositories
-user: 		"!"
-password:	"*"
-osname:		Darwin
+servers:
+ nexus:
+  url:		https://here.com/nexus
+  path:     /content/repositories
+  user: 	"!"
+  password:	"*"
+  osname:	Darwin
+ local:
+  path:     "/tmp"
