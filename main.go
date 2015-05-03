@@ -14,6 +14,7 @@ var BUILDDATE string = "now"
 var appConfig model.Config
 
 func main() {
+	log.Printf("artreyu - artifact repository access tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
 	config, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
 	if err != nil {
 		log.Fatalf("unable to load config from ~/.artreyu:%v", err)

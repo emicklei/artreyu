@@ -17,7 +17,7 @@ type assembleCmd struct {
 func newAssembleCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "assemble [destination]",
-		Short: "download parts of an artifact from the repository to [destination]",
+		Short: "create a new artifact [destination] by assembling parts from the descriptor",
 	}
 	assemble := new(assembleCmd)
 	assemble.Command = cmd
