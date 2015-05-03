@@ -1,9 +1,9 @@
-servers:
- nexus:
+osname:		Darwin
+repositories:
+- name:		local
+  path:     "/Users/emicklei/Artreyu"
+- name:		nexus
   url:		https://here.com/nexus
   path:     /content/repositories
   user: 	"!"
   password:	"*"
-  osname:	Darwin
- local:
-  path:     "/tmp"

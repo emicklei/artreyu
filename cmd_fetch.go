@@ -40,7 +40,7 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(cfg.Servers["nexus"])
+	r := nexus.NewRepository(cfg.Repositories[1])
 	err = r.Fetch(a, destination)
 	if err != nil {
 		log.Fatalf("unable to download artifact:%v", err)

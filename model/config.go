@@ -8,14 +8,15 @@ import (
 )
 
 type Config struct {
-	Servers map[string]ServerConfig
+	OSname       string
+	Repositories []RepositoryConfig
 }
-type ServerConfig struct {
+type RepositoryConfig struct {
+	parent   Config
 	URL      string
 	Path     string
 	User     string
 	Password string
-	OSname   string
 }
 
 func LoadConfig(source string) (c Config, err error) {
@@ -30,5 +31,10 @@ func LoadConfig(source string) (c Config, err error) {
 	if err != nil {
 		return c, err
 	}
+	for _, each := range c.Repositories {
+		(&each).parent = c
+	}
 	return c, nil
 }
+
+func (c RepositoryConfig) OSname() string { return c.parent.OSname }

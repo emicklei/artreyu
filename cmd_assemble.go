@@ -46,7 +46,7 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load assembly descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(cfg.Servers["nexus"])
+	r := nexus.NewRepository(cfg.Repositories[1])
 	err = r.Assemble(a, destination)
 	if err != nil {
 		log.Fatalf("unable to assemble from artifacts:%v", err)
