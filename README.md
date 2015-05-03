@@ -58,15 +58,18 @@ When running the "assemble" command with a directory
 	typhoon assemble target
 	```
 	
-Then the parts are downloaded to directory `target`
+Then the parts are downloaded to directory `target`, the parts are extracted and all content is compressed again into a new artifact.
 
 	```
 	/target
-		rest-service-1.9.tgz
-		ui-app-2.1.tgz
+		my-app-2.1.tgz
+		rest-service.bin
+		rest-service.properties
+		ui-app.html
+		ui-app.js
 	```
 	
-### Sample .typhoon
+### Sample .typhoon in $HOME
 
 	repository: nexus
 	url:		https://yours.com/nexus/content/repositories

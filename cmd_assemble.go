@@ -22,7 +22,7 @@ func newAssembleCmd() *cobra.Command {
 	}
 	assemble := new(assembleCmd)
 	assemble.Command = cmd
-	assemble.PersistentFlags().StringVar(&assemble.osname, "uname", "", "overwrite if assembling for different OS")
+	assemble.PersistentFlags().StringVar(&assemble.osname, "osname", "", "overwrite if assembling for different OS")
 	assemble.Command.Run = assemble.doAssemble
 	return assemble.Command
 }

@@ -12,15 +12,23 @@ import (
 
 type Assembly struct {
 	Artifact `yaml:",inline"`
-	Api      int        `json:"typhoon-api" yaml:"typhoon-api"`
 	Parts    []Artifact `json:"parts" yaml:"parts"`
 }
 
 type Artifact struct {
-	Group   string
-	Name    string `yaml:"artifact"`
+	// Descriptor api version. 1 is the default.
+	Api int `json:"typhoon-api" yaml:"typhoon-api"`
+
+	// Name of the group of artifacts. Cannot contain "/" or whitespace characters.
+	Group string
+	// Name of the artifact. Cannot contain "/" or whitespace characters.
+	Name string `yaml:"artifact"`
+	// Use semantic versioning or include the "SNAPSHOT" keyword for non-fixed versions.
 	Version string
-	Type    string
+	// Represents the file extension.
+	Type string
+	// If true then use "any" for the operating system name when archiving/fetching.
+	AnyOS bool `yaml:"anyos"`
 }
 
 func (a Artifact) StorageBase() string {
