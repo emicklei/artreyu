@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/emicklei/typhoon/model"
-	"github.com/emicklei/typhoon/nexus"
+	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -33,11 +33,11 @@ func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 	}
 	source := args[len(args)-1]
 
-	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".typhoon"))
+	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
 	if err != nil {
-		log.Fatalf("unable to load config from ~/.typhoon:%v", err)
+		log.Fatalf("unable to load config from ~/.artreyu:%v", err)
 	}
-	a, err := model.LoadArtifact("typhoon.yaml")
+	a, err := model.LoadArtifact("artreyu.yaml")
 	if err != nil {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}

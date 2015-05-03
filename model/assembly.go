@@ -17,7 +17,7 @@ type Assembly struct {
 
 type Artifact struct {
 	// Descriptor api version. 1 is the default.
-	Api int `json:"typhoon-api" yaml:"typhoon-api"`
+	Api int `json:"artreyu-api" yaml:"artreyu-api"`
 
 	// Name of the group of artifacts. Cannot contain "/" or whitespace characters.
 	Group string

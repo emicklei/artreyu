@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/emicklei/typhoon/model"
+	"github.com/emicklei/artreyu/model"
 )
 
 type Repository struct {

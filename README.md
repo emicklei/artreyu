@@ -1,10 +1,10 @@
-# Typhoon - artifact assembly tool
+# Artreyu - artifact assembly tool
 
 ### Archive a build result
 
-Given the artifact descriptor typhoon.yaml
+Given the artifact descriptor artreyu.yaml
 	```
-	typhoon-api: 1
+	api: 1
 	
 	group: com.company
 	artifact: my-app
@@ -14,7 +14,7 @@ Given the artifact descriptor typhoon.yaml
 
 When running the "archive" command with a file location
 	```
-	typhoon archive target/my-app.tgz
+	artreyu archive target/my-app.tgz
 	```
 
 Then the artifact is stored (uploaded) in the repo under
@@ -31,10 +31,10 @@ $osname can by `any` when the artifact is not operating system dependent (e.g te
 
 ### Assemble a new artifact
 
-Given the artifact descriptor typhoon.yaml
+Given the artifact descriptor artreyu.yaml
 
 	```
-	typhoon-api: 1
+	api: 1
 	
 	group: 		com.company
 	artifact: 	my-app
@@ -55,7 +55,7 @@ Given the artifact descriptor typhoon.yaml
 When running the "assemble" command with a directory
 
 	```
-	typhoon assemble target
+	artreyu assemble target
 	```
 	
 Then the parts are downloaded to directory `target`, the parts are extracted and all content is compressed again into a new artifact.
@@ -69,7 +69,7 @@ Then the parts are downloaded to directory `target`, the parts are extracted and
 		ui-app.js
 	```
 	
-### Sample .typhoon in $HOME
+### Sample .artreyu in $HOME
 
 	repository: nexus
 	url:		https://yours.com/nexus/content/repositories

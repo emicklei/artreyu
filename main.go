@@ -13,7 +13,7 @@ func main() {
 }
 
 var RootCmd = &cobra.Command{
-	Use:   "typhoon",
-	Short: "typhoon a is a tool for artifact management",
+	Use:   "artreyu",
+	Short: "artreyu a is a tool for artifact management",
 	Run:   func(cmd *cobra.Command, args []string) {},
 }

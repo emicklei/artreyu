@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/emicklei/typhoon/model"
-	"github.com/emicklei/typhoon/nexus"
+	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -37,11 +37,11 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to create destination folder:%v", err)
 	}
 
-	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".typhoon"))
+	cfg, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
 	if err != nil {
-		log.Fatalf("unable to load config from ~/.typhoon:%v", err)
+		log.Fatalf("unable to load config from ~/.artreyu:%v", err)
 	}
-	a, err := model.LoadAssembly("typhoon.yaml")
+	a, err := model.LoadAssembly("artreyu.yaml")
 	if err != nil {
 		log.Fatalf("unable to load assembly descriptor:%v", err)
 	}
