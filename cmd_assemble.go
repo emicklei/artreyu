@@ -11,7 +11,6 @@ import (
 
 type assembleCmd struct {
 	*cobra.Command
-	osname string
 }
 
 func newAssembleCmd() *cobra.Command {
@@ -21,7 +20,6 @@ func newAssembleCmd() *cobra.Command {
 	}
 	assemble := new(assembleCmd)
 	assemble.Command = cmd
-	assemble.PersistentFlags().StringVar(&assemble.osname, "osname", "", "overwrite if assembling for different OS")
 	assemble.Command.Run = assemble.doAssemble
 	return assemble.Command
 }
@@ -41,7 +39,7 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load assembly descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(appConfig.Repositories[1], appConfig.OSname)
+	r := nexus.NewRepository(appConfig.Repositories[1], OSName())
 	err = r.Assemble(a, destination)
 	if err != nil {
 		log.Fatalf("unable to assemble from artifacts:%v", err)

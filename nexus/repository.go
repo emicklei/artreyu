@@ -71,6 +71,7 @@ func (r Repository) Assemble(a model.Assembly, destination string) error {
 	if len(a.Parts) == 0 {
 		return fmt.Errorf("assemble has not parts listed")
 	}
+	// Download artifacts and decompress each
 	for _, each := range a.Parts {
 		where := filepath.Join(destination, each.StorageBase())
 		if err := r.Fetch(each, where); err != nil {
@@ -84,10 +85,11 @@ func (r Repository) Assemble(a model.Assembly, destination string) error {
 				return fmt.Errorf("remove failed, aborted because:%v", err)
 			}
 		}
-		if "tgz" == a.Type {
-			if err := model.Targz(destination, filepath.Join(destination, a.StorageBase())); err != nil {
-				return fmt.Errorf("targz failed, aborted because:%v", err)
-			}
+	}
+	// Compress into new artifact
+	if "tgz" == a.Type {
+		if err := model.Targz(destination, filepath.Join(destination, a.StorageBase())); err != nil {
+			return fmt.Errorf("targz failed, aborted because:%v", err)
 		}
 	}
 	return nil
