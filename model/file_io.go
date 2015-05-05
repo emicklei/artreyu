@@ -29,7 +29,7 @@ func Exists(loc string) bool {
 func Cp(dst, src string) error {
 	cleanSrc := path.Clean(src)
 	cleanDst := path.Clean(dst)
-	log.Printf("copy %s to %s", cleanSrc, cleanDst)
+	log.Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
 	if err := os.MkdirAll(filepath.Dir(cleanDst), os.ModePerm); err != nil {
 		return err
 	}
@@ -57,9 +57,9 @@ func Copy(dst, src string) error {
 }
 
 func Targz(sourceDir, destinationFile string) error {
-	log.Printf("creating tape archive %s from %s\n", destinationFile, sourceDir)
+	log.Printf("creating tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	// and exclude the archive created
-	cmd := exec.Command(
+	cmd,line := asCommand(
 		"tar",
 		"-czvf",
 		destinationFile,
@@ -70,14 +70,15 @@ func Targz(sourceDir, destinationFile string) error {
 		".")
 	data, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println(line)
 		log.Println(string(data))
 	}
 	return err
 }
 
 func Untargz(sourceFile, destinationDir string) error {
-	log.Printf("extracting tape archive %s to %s\n", sourceFile, destinationDir)
-	cmd := exec.Command(
+	log.Printf("extracting tape archive [%s] to [%s]\n", sourceFile, destinationDir)
+	cmd,line := asCommand(
 		"tar",
 		"-xvf",
 		sourceFile,
@@ -85,12 +86,17 @@ func Untargz(sourceFile, destinationDir string) error {
 		destinationDir)
 	data, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println(line)
 		log.Println(string(data))
 	}
 	return err
 }
 
 func FileRemove(source string) error {
-	log.Printf("removing %s\n", source)
+	log.Printf("removing [%s]\n", source)
 	return os.Remove(source)
+}
+
+func asCommand(params ...string) (*exec.Command , string) {
+	return exec.Command(params...,strings.Join(params," "))
 }
