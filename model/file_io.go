@@ -59,13 +59,11 @@ func Copy(dst, src string) error {
 
 func Targz(sourceDir, destinationFile string) error {
 	log.Printf("creating tape archive [%s] from [%s]\n", destinationFile, sourceDir)
-	// and exclude the archive created
+	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
 	cmd, line := asCommand(
 		"tar",
-		"-czvf",
-		destinationFile,
-		"--exclude",
-		filepath.Base(destinationFile),
+		"czvf",
+		tmp,
 		"-C",
 		sourceDir,
 		".")
@@ -73,15 +71,17 @@ func Targz(sourceDir, destinationFile string) error {
 	if err != nil {
 		log.Println(line)
 		log.Println(string(data))
+		return err
 	}
-	return err
+	// now move to destination
+	return os.Rename(tmp, destinationFile)
 }
 
 func Untargz(sourceFile, destinationDir string) error {
 	log.Printf("extracting tape archive [%s] to [%s]\n", sourceFile, destinationDir)
 	cmd, line := asCommand(
 		"tar",
-		"-xvf",
+		"xvf",
 		sourceFile,
 		"-C",
 		destinationDir)
