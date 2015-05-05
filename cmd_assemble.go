@@ -63,14 +63,15 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 		}
 	}
 	// Compress into new artifact
+	location := filepath.Join(destination, a.StorageBase())
 	if "tgz" == a.Type {
-		if err := model.Targz(destination, filepath.Join(destination, a.StorageBase())); err != nil {
+		if err := model.Targz(destination, location); err != nil {
 			log.Fatalf("targz failed, aborted because:%v", err)
 			return
 		}
 	}
 	// Archive new artifact
-	if err := mainRepo().Store(a.Artifact, destination); err != nil {
+	if err := mainRepo().Store(a.Artifact, location); err != nil {
 		log.Fatalf("archiving new artifact failed, aborted because:%v", err)
 		return
 	}

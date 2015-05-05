@@ -37,13 +37,13 @@ func (c CachingRepository) Fetch(a Artifact, destination string) error {
 }
 
 func (c CachingRepository) Store(a Artifact, source string) error {
-	log.Printf("storing [%s] to [%s]\n", a.StorageBase(), c.cache.ID())
+	log.Printf("storing [%s] in [%s]\n", a.StorageBase(), c.source.ID())
 	if err := c.source.Store(a, source); err != nil {
 		return err
 	}
 	if a.IsSnapshot() {
 		return nil
 	}
-	log.Printf("storing [%s] to [%s]\n", a.StorageBase(), c.cache.ID())
+	log.Printf("storing [%s] in [%s]\n", a.StorageBase(), c.cache.ID())
 	return c.cache.Store(a, source)
 }
