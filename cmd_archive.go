@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/emicklei/artreyu/model"
-	"github.com/emicklei/artreyu/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -35,8 +34,7 @@ func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(appConfig.Repositories[1], OSName()) // TODO how to specify nexus
-	err = r.Store(a, source)
+	err = mainRepo.Store(a, source)
 	if err != nil {
 		log.Fatalf("unable to upload artifact:%v", err)
 	}

@@ -1,7 +1,6 @@
 package local
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
@@ -16,6 +15,8 @@ func NewRepository(config model.RepositoryConfig, operatingSystemName string) Re
 	return Repository{operatingSystemName, config}
 }
 
+func (r Repository) ID() string { return "local" }
+
 // copy the file (source) to a local directory and name indicated by the artifact
 func (r Repository) Store(a model.Artifact, source string) error {
 	dest := a.StorageLocation(r.osName(a.AnyOS))
@@ -24,14 +25,10 @@ func (r Repository) Store(a model.Artifact, source string) error {
 
 func (r Repository) Fetch(a model.Artifact, destination string) error {
 	src := a.StorageLocation(r.osName(a.AnyOS))
-	return model.Cp(destination, filepath.Join(r.config.URL, src))
-}
-
-func (r Repository) Assemble(a model.Assembly, source string) error {
-	if len(a.Parts) == 0 {
-		return fmt.Errorf("assemble has not parts listed")
+	if !model.Exists(src) {
+		return model.ErrArtifactNotFound
 	}
-	return nil
+	return model.Cp(destination, filepath.Join(r.config.URL, src))
 }
 
 func (r Repository) Exists(a model.Artifact) bool {

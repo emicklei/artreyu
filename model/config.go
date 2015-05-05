@@ -11,7 +11,18 @@ type Config struct {
 	OSname       string
 	Repositories []RepositoryConfig
 }
+
+func (c Config) Named(name string) RepositoryConfig {
+	for _, each := range c.Repositories {
+		if each.Name == name {
+			return each
+		}
+	}
+	panic("no such repository in config:" + name)
+}
+
 type RepositoryConfig struct {
+	Name     string
 	URL      string
 	Path     string
 	User     string

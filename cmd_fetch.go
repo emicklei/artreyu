@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
-	"github.com/emicklei/artreyu/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +15,9 @@ type fetchCmd struct {
 func newFetchCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "fetch [destination]",
-		Short: "download an artifact from the repository to [destination]",
+		Short: "download an artifact from the repository",
+		Long: `destination can be a directory or regular file.
+Parent directories will be created if absent.`,
 	}
 	fetch := new(fetchCmd)
 	fetch.Command = cmd
@@ -34,8 +36,13 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	r := nexus.NewRepository(appConfig.Repositories[1], OSName())
-	err = r.Fetch(a, destination)
+	// check if destination is directory
+	var regular string = destination
+	if model.IsDirectory(destination) {
+		regular = filepath.Join(destination, a.StorageBase())
+	}
+
+	err = mainRepo.Fetch(a, regular)
 	if err != nil {
 		log.Fatalf("unable to download artifact:%v", err)
 	}

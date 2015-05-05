@@ -5,7 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/nexus"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +20,7 @@ var RootCmd = &cobra.Command{
 	Short: "artreyu a is an artifact assembly tool",
 	Run:   func(cmd *cobra.Command, args []string) {},
 }
+var mainRepo model.Repository
 
 func main() {
 	log.Printf("artreyu - artifact assembly tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
@@ -27,6 +30,11 @@ func main() {
 	}
 	// share config
 	appConfig = config
+
+	// nexus with local cache for now
+	nexus := nexus.NewRepository(config.Named("nexus"), OSName())
+	local := local.NewRepository(config.Named("local"), OSName())
+	mainRepo = model.NewCachingRepository(nexus, local)
 
 	RootCmd.PersistentFlags().StringVar(&osOverride, "os", "", "overwrite if assembling for different OS")
 	RootCmd.AddCommand(newArchiveCmd())

@@ -9,6 +9,15 @@ import (
 	"path/filepath"
 )
 
+func IsDirectory(loc string) bool {
+	s, err := os.Stat(loc)
+	return err == nil && s.IsDir()
+}
+
+func IsRegular(loc string) bool {
+	s, err := os.Stat(loc)
+	return err == nil && !s.IsDir()
+}
 func Exists(loc string) bool {
 	_, err := os.Stat(loc)
 	return err == nil
