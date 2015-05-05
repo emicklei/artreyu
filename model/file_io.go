@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 func IsDirectory(loc string) bool {
@@ -59,7 +60,7 @@ func Copy(dst, src string) error {
 func Targz(sourceDir, destinationFile string) error {
 	log.Printf("creating tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	// and exclude the archive created
-	cmd,line := asCommand(
+	cmd, line := asCommand(
 		"tar",
 		"-czvf",
 		destinationFile,
@@ -78,7 +79,7 @@ func Targz(sourceDir, destinationFile string) error {
 
 func Untargz(sourceFile, destinationDir string) error {
 	log.Printf("extracting tape archive [%s] to [%s]\n", sourceFile, destinationDir)
-	cmd,line := asCommand(
+	cmd, line := asCommand(
 		"tar",
 		"-xvf",
 		sourceFile,
@@ -97,6 +98,6 @@ func FileRemove(source string) error {
 	return os.Remove(source)
 }
 
-func asCommand(params ...string) (*exec.Command , string) {
-	return exec.Command(params...,strings.Join(params," "))
+func asCommand(params ...string) (*exec.Cmd, string) {
+	return exec.Command(params[0], params[1:]...), strings.Join(params, " ")
 }
