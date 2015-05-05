@@ -53,7 +53,7 @@ When running the "assemble" command with a directory
 
 	artreyu assemble target
 	
-Then the parts are downloaded to directory `target`, the parts are extracted and all content is compressed again into a new artifact.
+Then the parts are downloaded to directory `target`, the parts are extracted, all content is compressed again into a new artifact and the artifact is stored.
 
 	/target
 		my-app-2.1.tgz

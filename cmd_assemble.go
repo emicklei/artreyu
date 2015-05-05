@@ -47,7 +47,7 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 	// Download artifacts and decompress each
 	for _, each := range a.Parts {
 		where := filepath.Join(destination, each.StorageBase())
-		if err := mainRepo.Fetch(each, where); err != nil {
+		if err := mainRepo().Fetch(each, where); err != nil {
 			log.Fatalf("aborted because:%v", err)
 			return
 		}
@@ -70,7 +70,7 @@ func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
 		}
 	}
 	// Archive new artifact
-	if err := mainRepo.Store(a.Artifact, destination); err != nil {
+	if err := mainRepo().Store(a.Artifact, destination); err != nil {
 		log.Fatalf("archiving new artifact failed, aborted because:%v", err)
 		return
 	}

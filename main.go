@@ -15,14 +15,27 @@ var VERSION string = "dev"
 var BUILDDATE string = "now"
 var appConfig model.Config
 var osOverride string
+var repo model.Repository
+
 var RootCmd = &cobra.Command{
 	Use:   "artreyu",
 	Short: "artreyu a is an artifact assembly tool",
 	Run:   func(cmd *cobra.Command, args []string) {},
 }
-var mainRepo model.Repository
 
 func main() {
+	RootCmd.PersistentFlags().StringVar(&osOverride, "os", "", "overwrite if assembling for different OS")
+	RootCmd.AddCommand(newArchiveCmd())
+	RootCmd.AddCommand(newFetchCmd())
+	RootCmd.AddCommand(newAssembleCmd())
+	RootCmd.Execute()
+}
+
+func mainRepo() model.Repository {
+	// lazy initialize
+	if repo != nil {
+		return repo
+	}
 	log.Printf("artreyu - artifact assembly tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
 	config, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
 	if err != nil {
@@ -34,13 +47,11 @@ func main() {
 	// nexus with local cache for now
 	nexus := nexus.NewRepository(config.Named("nexus"), OSName())
 	local := local.NewRepository(config.Named("local"), OSName())
-	mainRepo = model.NewCachingRepository(nexus, local)
 
-	RootCmd.PersistentFlags().StringVar(&osOverride, "os", "", "overwrite if assembling for different OS")
-	RootCmd.AddCommand(newArchiveCmd())
-	RootCmd.AddCommand(newFetchCmd())
-	RootCmd.AddCommand(newAssembleCmd())
-	RootCmd.Execute()
+	// share the repo
+	repo = model.NewCachingRepository(nexus, local)
+
+	return repo
 }
 
 func OSName() string {

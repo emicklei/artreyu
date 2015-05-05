@@ -34,7 +34,7 @@ func (c *archiveCmd) doArchive(cmd *cobra.Command, args []string) {
 		log.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
-	err = mainRepo.Store(a, source)
+	err = mainRepo().Store(a, source)
 	if err != nil {
 		log.Fatalf("unable to upload artifact:%v", err)
 	}

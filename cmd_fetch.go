@@ -42,7 +42,7 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 		regular = filepath.Join(destination, a.StorageBase())
 	}
 
-	err = mainRepo.Fetch(a, regular)
+	err = mainRepo().Fetch(a, regular)
 	if err != nil {
 		log.Fatalf("unable to download artifact:%v", err)
 	}
