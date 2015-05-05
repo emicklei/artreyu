@@ -49,10 +49,13 @@ func Copy(dst, src string) error {
 
 func Targz(sourceDir, destinationFile string) error {
 	log.Printf("creating tape archive %s from %s\n", destinationFile, sourceDir)
+	// and exclude the archive created
 	cmd := exec.Command(
 		"tar",
 		"-czvf",
 		destinationFile,
+		"--exclude",
+		filepath.Base(destinationFile),
 		"-C",
 		sourceDir,
 		".")
