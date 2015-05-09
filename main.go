@@ -40,7 +40,10 @@ func initRootCommand() {
 Its primary purpose it to create assembly artifacts from build artifacts archived in a (remote) repository.
 
 Currently, it supports a local (filesystem) and Sonatype Nexus repository.
-`,
+
+See https://github.com/emicklei/artreyu for more details.
+
+(c)2015 ernestmicklei.com, MIT license`,
 		Run: func(cmd *cobra.Command, args []string) {},
 	}
 

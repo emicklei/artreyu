@@ -53,7 +53,7 @@ When running the "assemble"
 
 	artreyu assemble
 	
-Then the parts are downloaded to a temporary directory, the parts are extracted, all content is compressed again into a new artifact and the artifact is stored. You can set the temporary director using the command flag `--target`.
+Then the parts are downloaded to a temporary directory, the parts are extracted, all content is compressed again into a new artifact and the artifact is stored. You can set the temporary directory by adding the directory name to the commandline, e.g. `artreyu assemble target`
 
 	target/
 		my-app-2.1.tgz
@@ -74,4 +74,6 @@ Then the parts are downloaded to a temporary directory, the parts are extracted,
 	  url:		https://yours.com/nexus
 	  path:     /content/repositories
 	  user: 	admin
-	  password:	****  	  
+	  password:	****  
+	
+#### MIT License, ernestmicklei.com		  
