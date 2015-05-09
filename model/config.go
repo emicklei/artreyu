@@ -29,11 +29,12 @@ func (c Config) Named(name string) (RepositoryConfig, error) {
 }
 
 type RepositoryConfig struct {
-	Name     string
-	URL      string
-	Path     string
-	User     string
-	Password string
+	Name      string
+	URL       string
+	Path      string
+	User      string
+	Password  string
+	Snapshots bool
 }
 
 func LoadConfig(source string) (c Config, err error) {

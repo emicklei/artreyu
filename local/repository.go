@@ -27,7 +27,7 @@ func (r Repository) Store(a model.Artifact, source string) error {
 func (r Repository) Fetch(a model.Artifact, destination string) error {
 	src := filepath.Join(r.config.Path, a.StorageLocation(r.osName(a.AnyOS)))
 	if !model.Exists(src) {
-		return fmt.Errorf("nu such file [%s]", src)
+		return fmt.Errorf("no such file [%s]", src)
 	}
 	return model.Cp(destination, src)
 }

@@ -29,7 +29,7 @@ func (c CachingRepository) Exists(a Artifact) bool {
 func (c CachingRepository) Fetch(a Artifact, destination string) error {
 	log.Printf("fetching [%s] from [%s]\n", a.StorageBase(), c.cache.ID())
 	err := c.cache.Fetch(a, destination)
-	if err == ErrArtifactNotFound {
+	if err != nil {
 		log.Printf("not found on [%s], try fetching from [%s]\n", c.cache.ID(), c.source.ID())
 		return c.source.Fetch(a, destination)
 	}

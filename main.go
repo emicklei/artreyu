@@ -77,7 +77,7 @@ func mainRepo() model.Repository {
 	if repo != nil {
 		return repo
 	}
-	model.Printf("artreyu - artifact assembly tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
+	model.Printf("artreyu - artifact assembly tool (build:%s, commit:%s)\n", BUILDDATE, VERSION)
 	if appSettings.Verbose {
 		model.Printf("loading configuration from [%s]\n", appSettings.MainConfigLocation)
 	}
