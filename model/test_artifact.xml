@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<dependency>
-  <groupId>com.ubanita</groupId>
-  <artifactId>torch</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <type>tgz</type>
-</dependency>

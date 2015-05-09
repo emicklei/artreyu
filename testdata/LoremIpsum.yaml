@@ -1,0 +1,6 @@
+api: 1
+
+group: com.company
+artifact: LoremIpsum
+version: 1.0-SNAPSHOT
+type: txt

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
@@ -13,22 +13,60 @@ import (
 
 var VERSION string = "dev"
 var BUILDDATE string = "now"
-var appConfig model.Config
-var osOverride string
+
+var appSettings Settings
+
 var repo model.Repository
 
-var RootCmd = &cobra.Command{
-	Use:   "artreyu",
-	Short: "artreyu a is an artifact assembly tool",
-	Run:   func(cmd *cobra.Command, args []string) {},
+var RootCmd *cobra.Command
+
+type Settings struct {
+	Verbose                bool
+	OS                     string
+	MainConfigLocation     string
+	ArtifactConfigLocation string
 }
 
 func main() {
-	RootCmd.PersistentFlags().StringVar(&osOverride, "os", "", "overwrite if assembling for different OS")
+	initRootCommand()
+	RootCmd.Execute()
+}
+
+func initRootCommand() {
+	RootCmd = &cobra.Command{
+		Use:   "artreyu",
+		Short: "archives, fetches and assembles build artifacts",
+		Long: `A tool for handling versioned, platform dependent artifacts.
+Its primary purpose it to create assembly artifacts from build artifacts archived in a (remote) repository.
+
+Currently, it supports a local (filesystem) and Sonatype Nexus repository.
+`,
+		Run: func(cmd *cobra.Command, args []string) {},
+	}
+
+	RootCmd.PersistentFlags().StringVarP(&appSettings.MainConfigLocation,
+		"config",
+		"c",
+		filepath.Join(os.Getenv("HOME"), ".artreyu"),
+		"location of the artreyu repositories configuration")
+	RootCmd.PersistentFlags().StringVarP(&appSettings.ArtifactConfigLocation,
+		"descriptor",
+		"d",
+		"artreyu.yaml",
+		"overwrite if the artifact descriptor has a different name or location")
+	RootCmd.PersistentFlags().StringVarP(&appSettings.OS,
+		"os",
+		"o",
+		runtime.GOOS,
+		"overwrite if assembling for different OS")
+	RootCmd.PersistentFlags().BoolVarP(&appSettings.Verbose,
+		"verbose",
+		"v",
+		false,
+		"set to true for more execution details")
 	RootCmd.AddCommand(newArchiveCmd())
 	RootCmd.AddCommand(newFetchCmd())
 	RootCmd.AddCommand(newAssembleCmd())
-	RootCmd.Execute()
 }
 
 func mainRepo() model.Repository {
@@ -36,27 +74,38 @@ func mainRepo() model.Repository {
 	if repo != nil {
 		return repo
 	}
-	log.Printf("artreyu - artifact assembly tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
-	config, err := model.LoadConfig(filepath.Join(os.Getenv("HOME"), ".artreyu"))
+	model.Printf("artreyu - artifact assembly tool (version:%s, build:%s)\n", VERSION, BUILDDATE)
+	if appSettings.Verbose {
+		model.Printf("loading configuration from [%s]\n", appSettings.MainConfigLocation)
+	}
+	config, err := model.LoadConfig(appSettings.MainConfigLocation)
 	if err != nil {
-		log.Fatalf("unable to load config from ~/.artreyu:%v", err)
+		model.Fatalf("unable to load config %v", err)
 	}
-	// share config
-	appConfig = config
-
-	// nexus with local cache for now
-	nexus := nexus.NewRepository(config.Named("nexus"), OSName())
-	local := local.NewRepository(config.Named("local"), OSName())
-
-	// share the repo
+	localconfig, err := config.Named("local")
+	if err != nil {
+		if appSettings.Verbose {
+			model.Printf("no local repository available\n")
+		}
+		nexusconfig, err := config.Named("nexus")
+		if err != nil {
+			if appSettings.Verbose {
+				model.Printf("no nexus repository available\n")
+			}
+			model.Fatalf("no repository available")
+		}
+		return nexus.NewRepository(nexusconfig, appSettings.OS)
+	}
+	local := local.NewRepository(localconfig, appSettings.OS)
+	nexusconfig, err := config.Named("nexus")
+	if err != nil {
+		if appSettings.Verbose {
+			model.Printf("no nexus repository available, using local\n")
+		}
+		return local
+	}
+	nexus := nexus.NewRepository(nexusconfig, appSettings.OS)
+	// share
 	repo = model.NewCachingRepository(nexus, local)
-
 	return repo
-}
-
-func OSName() string {
-	if len(osOverride) > 0 {
-		return osOverride
-	}
-	return appConfig.OSname
 }

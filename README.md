@@ -17,14 +17,14 @@ When running the "archive" command with a file location
 
 Then the artifact is uploaded to the repo under
 
-	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/Darwin/my-app-1.0-SNAPSHOT.tgz	
+	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/darwin/my-app-1.0-SNAPSHOT.tgz	
 
 ### Directory layout
 
 	$group/$artifact/$version/$osname/$artifact-$version.$type
 
 
-$osname can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...). Such artifacts will have the descriptor field `anyos` set to true. In the above example, osname is set to "Darwin" because the artreyu configuration (see below) specifies that. It can be overriden using the command flag `--os`
+$osname can by `any` when the artifact is not operating system dependent (e.g texts,scripts,Java,...). Such artifacts will have the descriptor field `anyos` set to true. In the above example, osname is set to "darwin" when running from an OS X machine. It can be overriden using the command flag `--os`
 
 ### Assemble a new artifact
 
@@ -49,13 +49,13 @@ Given the artifact descriptor artreyu.yaml
 	  type:		tgz
 	  anyos:    true
 
-When running the "assemble" command with a directory
+When running the "assemble"
 
-	artreyu assemble target
+	artreyu assemble
 	
-Then the parts are downloaded to directory `target`, the parts are extracted, all content is compressed again into a new artifact and the artifact is stored.
+Then the parts are downloaded to a temporary directory, the parts are extracted, all content is compressed again into a new artifact and the artifact is stored. You can set the temporary director using the command flag `--target`.
 
-	/target
+	target/
 		my-app-2.1.tgz
 		rest-service.bin
 		rest-service.properties
@@ -64,7 +64,8 @@ Then the parts are downloaded to directory `target`, the parts are extracted, al
 	
 ### Sample configuration file .artreyu, stored in $HOME
 
-	osname:		Darwin
+	api: 1
+	
 	repositories:
 	- name:		local
 	  path:     /Users/you/artreyu	

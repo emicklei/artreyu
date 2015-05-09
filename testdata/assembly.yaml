@@ -1,0 +1,17 @@
+api: 1
+
+group: com.company
+artifact: assembly
+version: 2
+type: tgz
+
+parts:
+- group: com.company
+  artifact: LoremIpsum
+  version: 1.0-SNAPSHOT
+  type: txt
+
+- group: com.company
+  artifact: doc
+  version: 2.0
+  type: tgz

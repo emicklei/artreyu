@@ -1,4 +1,4 @@
-osname:		Darwin
+api:			1
 repositories:
 - name:		local
   path:     "/tmp/Artreyu"

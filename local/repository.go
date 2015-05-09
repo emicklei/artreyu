@@ -1,6 +1,7 @@
 package local
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
@@ -20,15 +21,15 @@ func (r Repository) ID() string { return "local" }
 // copy the file (source) to a local directory and name indicated by the artifact
 func (r Repository) Store(a model.Artifact, source string) error {
 	dest := a.StorageLocation(r.osName(a.AnyOS))
-	return model.Cp(filepath.Join(r.config.URL, dest), source)
+	return model.Cp(filepath.Join(r.config.Path, dest), source)
 }
 
 func (r Repository) Fetch(a model.Artifact, destination string) error {
-	src := a.StorageLocation(r.osName(a.AnyOS))
+	src := filepath.Join(r.config.Path, a.StorageLocation(r.osName(a.AnyOS)))
 	if !model.Exists(src) {
-		return model.ErrArtifactNotFound
+		return fmt.Errorf("nu such file [%s]", src)
 	}
-	return model.Cp(destination, filepath.Join(r.config.URL, src))
+	return model.Cp(destination, src)
 }
 
 func (r Repository) Exists(a model.Artifact) bool {

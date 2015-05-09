@@ -2,7 +2,6 @@ package model
 
 import (
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -28,12 +27,18 @@ func Exists(loc string) bool {
 // Dst is the full directory path and file name
 // Src can be a relative directory path and file name
 func Cp(dst, src string) error {
-	cleanSrc := path.Clean(src)
-	cleanDst := path.Clean(dst)
-	log.Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
+	cleanSrc, err := filepath.Abs(path.Clean(src))
+	if err != nil {
+		return err
+	}
+	cleanDst, err := filepath.Abs(path.Clean(dst))
+	if err != nil {
+		return err
+	}
 	if err := os.MkdirAll(filepath.Dir(cleanDst), os.ModePerm); err != nil {
 		return err
 	}
+	Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
 	return exec.Command("cp", cleanSrc, cleanDst).Run()
 }
 
@@ -58,7 +63,7 @@ func Copy(dst, src string) error {
 }
 
 func Targz(sourceDir, destinationFile string) error {
-	log.Printf("creating tape archive [%s] from [%s]\n", destinationFile, sourceDir)
+	Printf("creating compressed tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
 	cmd, line := asCommand(
 		"tar",
@@ -69,8 +74,8 @@ func Targz(sourceDir, destinationFile string) error {
 		".")
 	data, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Println(line)
-		log.Println(string(data))
+		Printf(line + "\n")
+		Printf(string(data))
 		return err
 	}
 	// now move to destination
@@ -78,7 +83,7 @@ func Targz(sourceDir, destinationFile string) error {
 }
 
 func Untargz(sourceFile, destinationDir string) error {
-	log.Printf("extracting tape archive [%s] to [%s]\n", sourceFile, destinationDir)
+	Printf("extracting compressed tape archive [%s] to [%s]\n", sourceFile, destinationDir)
 	cmd, line := asCommand(
 		"tar",
 		"xvf",
@@ -87,14 +92,14 @@ func Untargz(sourceFile, destinationDir string) error {
 		destinationDir)
 	data, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Println(line)
-		log.Println(string(data))
+		Printf(line + "\n")
+		Printf(string(data))
 	}
 	return err
 }
 
 func FileRemove(source string) error {
-	log.Printf("removing [%s]\n", source)
+	Printf("removing [%s]\n", source)
 	return os.Remove(source)
 }
 

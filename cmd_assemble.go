@@ -9,32 +9,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type assembleCmd struct {
-	*cobra.Command
-}
-
 func newAssembleCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "assemble [destination]",
-		Short: "create a new artifact [destination] by assembling parts from the descriptor",
+	return &cobra.Command{
+		Use:   "assemble [optional:destination]",
+		Short: "upload a new artifact by assembling fetched parts as specified in the descriptor",
+		Run:   doAssemble,
 	}
-	assemble := new(assembleCmd)
-	assemble.Command = cmd
-	assemble.Command.Run = assemble.doAssemble
-	return assemble.Command
 }
 
-func (s *assembleCmd) doAssemble(cmd *cobra.Command, args []string) {
+func doAssemble(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		log.Fatalf("missing destination")
 	}
-	destination := args[len(args)-1]
+	var destination = os.TempDir()
+	if len(args) > 0 {
+		destination = args[0]
+	}
 
 	if err := os.MkdirAll(destination, os.ModePerm); err != nil {
 		log.Fatalf("unable to create destination folder:%v", err)
 	}
 
-	a, err := model.LoadAssembly("artreyu.yaml")
+	a, err := model.LoadAssembly(appSettings.ArtifactConfigLocation)
 	if err != nil {
 		log.Fatalf("unable to load assembly descriptor:%v", err)
 	}

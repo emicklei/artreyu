@@ -1,39 +1,31 @@
 package main
 
 import (
-	"log"
 	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
 	"github.com/spf13/cobra"
 )
 
-type fetchCmd struct {
-	*cobra.Command
-}
-
 func newFetchCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "fetch [destination]",
+	return &cobra.Command{
+		Use:   "fetch [optional:destination]",
 		Short: "download an artifact from the repository",
 		Long: `destination can be a directory or regular file.
 Parent directories will be created if absent.`,
+		Run: doFetch,
 	}
-	fetch := new(fetchCmd)
-	fetch.Command = cmd
-	fetch.Command.Run = fetch.doFetch
-	return fetch.Command
 }
 
-func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
-	if len(args) == 0 {
-		log.Fatalf("missing destination")
+func doFetch(cmd *cobra.Command, args []string) {
+	var destination = "."
+	if len(args) > 0 {
+		destination = args[0]
 	}
-	destination := args[len(args)-1]
 
-	a, err := model.LoadArtifact("artreyu.yaml")
+	a, err := model.LoadArtifact(appSettings.ArtifactConfigLocation)
 	if err != nil {
-		log.Fatalf("unable to load artifact descriptor:%v", err)
+		model.Fatalf("unable to load artifact descriptor:%v", err)
 	}
 
 	// check if destination is directory
@@ -44,6 +36,6 @@ func (f *fetchCmd) doFetch(cmd *cobra.Command, args []string) {
 
 	err = mainRepo().Fetch(a, regular)
 	if err != nil {
-		log.Fatalf("unable to download artifact:%v", err)
+		model.Fatalf("unable to download artifact:%v", err)
 	}
 }

@@ -1,24 +1,31 @@
 package model
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 
 	"gopkg.in/yaml.v2"
 )
 
+var ErrNoSuchRepository = errors.New("no configuration for this repository name")
+
 type Config struct {
-	OSname       string
+	Api          int
 	Repositories []RepositoryConfig
+
+	verbose      bool
+	osOverride   string
+	fileLocation string
 }
 
-func (c Config) Named(name string) RepositoryConfig {
+func (c Config) Named(name string) (RepositoryConfig, error) {
 	for _, each := range c.Repositories {
 		if each.Name == name {
-			return each
+			return each, nil
 		}
 	}
-	panic("no such repository in config:" + name)
+	return RepositoryConfig{}, ErrNoSuchRepository
 }
 
 type RepositoryConfig struct {

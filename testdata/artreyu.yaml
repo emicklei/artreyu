@@ -1,0 +1,6 @@
+api: 1
+
+group: com.company
+artifact: doc
+version: 2.0
+type: tgz
