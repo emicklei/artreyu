@@ -48,7 +48,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		}
 		if "tgz" == each.Type {
 			if err := model.Untargz(where, destination); err != nil {
-				model.Fatalf("untargz failed, aborted because:%v", err)
+				model.Fatalf("tar extract failed, aborted because:%v", err)
 				return
 			}
 			if err := model.FileRemove(where); err != nil {
@@ -61,7 +61,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	location := filepath.Join(destination, a.StorageBase())
 	if "tgz" == a.Type {
 		if err := model.Targz(destination, location); err != nil {
-			model.Fatalf("targz failed, aborted because:%v", err)
+			model.Fatalf("tar compress failed, aborted because:%v", err)
 			return
 		}
 	}

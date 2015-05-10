@@ -37,7 +37,7 @@ func initRootCommand() {
 		Use:   "artreyu",
 		Short: "archives, fetches and assembles build artifacts",
 		Long: `A tool for handling versioned, platform dependent artifacts.
-Its primary purpose it to create assembly artifacts from build artifacts archived in a (remote) repository.
+Its primary purpose is to create assembly artifacts from build artifacts archived in a (remote) repository.
 
 Currently, it supports a local (filesystem) and Sonatype Nexus repository.
 
