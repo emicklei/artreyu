@@ -31,18 +31,22 @@ type Artifact struct {
 	AnyOS bool `yaml:"anyos"`
 }
 
+// StorageBase returns the file name to which the artifact is stored.
 func (a Artifact) StorageBase() string {
 	return fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Type)
 }
 
+// StorageLocation returns the relative resource path to store the artifact.
 func (a Artifact) StorageLocation(osname string) string {
 	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, osname, a.StorageBase())
 }
 
+// IsSnapshot returns true if the version has the substring "SNAPSHOT".
 func (a Artifact) IsSnapshot() bool {
 	return strings.Index(a.Version, "SNAPSHOT") != -1
 }
 
+// LoadAssembly parses an Assembly by reading the src file.
 func LoadAssembly(src string) (a Assembly, e error) {
 	f, err := os.Open(src)
 	if err != nil {
@@ -58,6 +62,7 @@ func LoadAssembly(src string) (a Assembly, e error) {
 	return a, nil
 }
 
+// LoadArtifat parses an Artifact by reading the src file.
 func LoadArtifact(src string) (a Artifact, e error) {
 	f, err := os.Open(src)
 	if err != nil {
