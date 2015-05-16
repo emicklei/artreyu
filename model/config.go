@@ -51,3 +51,15 @@ func LoadConfig(source string) (c Config, err error) {
 	}
 	return c, nil
 }
+
+func RepositoryConfigNamed(settings *Settings, name string) RepositoryConfig {
+	config, err := LoadConfig(settings.MainConfigLocation)
+	if err != nil {
+		Fatalf("unable to load config %v", err)
+	}
+	repoconfig, err := config.Named(name)
+	if err != nil {
+		Fatalf("no configuration for repository named [%s], %v", name, err)
+	}
+	return repoconfig
+}
