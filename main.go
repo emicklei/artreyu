@@ -40,7 +40,7 @@ See https://github.com/emicklei/artreyu for more details.
 	archive.Run = func(cmd *cobra.Command, args []string) {
 		artifact, err := model.LoadArtifact(ApplicationSettings.ArtifactConfigLocation)
 		if err != nil {
-			model.Fatalf("load artifact failed, fetch aborted: %v", err)
+			model.Fatalf("load artifact failed, archive aborted: %v", err)
 		}
 		target := ApplicationSettings.TargetRepository
 		if "local" == target {
@@ -53,8 +53,8 @@ See https://github.com/emicklei/artreyu for more details.
 			return
 		}
 		// not local
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *ApplicationSettings, args); err != nil {
-			model.Fatalf("fetch failed, %v", err)
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", artifact, *ApplicationSettings, args); err != nil {
+			model.Fatalf("archive failed, %v", err)
 		}
 	}
 	RootCmd.AddCommand(archive)
