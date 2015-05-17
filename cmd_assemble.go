@@ -51,7 +51,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 				return
 			}
 		} else {
-			if err := command.RunPluginWithArtifact("atreyu-"+target, "fetch", each, *ApplicationSettings, args); err != nil {
+			if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", each, *ApplicationSettings, args); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)
 				return
 			}
@@ -84,7 +84,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 			return
 		}
 	} else {
-		if err := command.RunPluginWithArtifact("atreyu-"+target, "archive", a.Artifact, *ApplicationSettings, args); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *ApplicationSettings, args); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}
