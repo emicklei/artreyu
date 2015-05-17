@@ -35,7 +35,12 @@ func NewSettingsBoundToFlags(cmd *cobra.Command) *model.Settings {
 		"verbose",
 		"v",
 		false,
-		"set to true for more execution details")
+		"set to true to log more execution details")
+	cmd.PersistentFlags().StringVarP(&settings.TargetRepository,
+		"repository",
+		"r",
+		"local",
+		"name of the repository as defined in the artreyu repositories configuration")
 	return settings
 }
 

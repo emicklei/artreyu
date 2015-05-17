@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/emicklei/artreyu/command"
+	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
 	"github.com/spf13/cobra"
 )
@@ -15,10 +16,6 @@ func newAssembleCmd() *cobra.Command {
 		Short: "upload a new artifact by assembling fetched parts as specified in the descriptor",
 		Run:   doAssemble,
 	}
-}
-
-func mainRepo() model.Repository {
-	return nil
 }
 
 func doAssemble(cmd *cobra.Command, args []string) {
@@ -47,9 +44,17 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	// Download artifacts and decompress each
 	for _, each := range a.Parts {
 		where := filepath.Join(destination, each.StorageBase())
-		if err := command.RunPluginWithArtifact("atreyu-nexus", "fetch", each, *ApplicationSettings, args); err != nil {
-			model.Fatalf("aborted because:%v", err)
-			return
+		target := ApplicationSettings.TargetRepository
+		if "local" == target {
+			if err := localRepository(ApplicationSettings).Fetch(a.Artifact, where); err != nil {
+				model.Fatalf("fetching artifact failed, aborted because:%v", err)
+				return
+			}
+		} else {
+			if err := command.RunPluginWithArtifact("atreyu-"+target, "fetch", each, *ApplicationSettings, args); err != nil {
+				model.Fatalf("fetching artifact failed, aborted because:%v", err)
+				return
+			}
 		}
 		// TODO .tar.gz, .zip, .gz
 		if "tgz" == each.Type {
@@ -72,8 +77,20 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		}
 	}
 	// Archive new artifact
-	if err := command.RunPluginWithArtifact("atreyu-nexus", "archive", a.Artifact, *ApplicationSettings, args); err != nil {
-		model.Fatalf("archiving new artifact failed, aborted because:%v", err)
-		return
+	target := ApplicationSettings.TargetRepository
+	if "local" == target {
+		if err := localRepository(ApplicationSettings).Store(a.Artifact, location); err != nil {
+			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
+			return
+		}
+	} else {
+		if err := command.RunPluginWithArtifact("atreyu-"+target, "archive", a.Artifact, *ApplicationSettings, args); err != nil {
+			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
+			return
+		}
 	}
+}
+
+func localRepository(settings *model.Settings) model.Repository {
+	return local.NewRepository(model.RepositoryConfigNamed(settings, "local"), settings.OS)
 }

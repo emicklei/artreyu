@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/emicklei/artreyu/command"
+	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
 	"github.com/spf13/cobra"
 )
@@ -29,21 +30,61 @@ Its primary purpose is to create assembly artifacts from build artifacts archive
 See https://github.com/emicklei/artreyu for more details.
 
 (c)2015 ernestmicklei.com, MIT license`,
-		Run: func(cmd *cobra.Command, args []string) {},
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Help()
+		},
 	}
 	ApplicationSettings = command.NewSettingsBoundToFlags(RootCmd)
 
 	archive := command.NewCommandForArchive()
 	archive.Run = func(cmd *cobra.Command, args []string) {
-		command.RunPlugin("artreyu-nexus", "archive", *ApplicationSettings, args)
+		artifact, err := model.LoadArtifact(ApplicationSettings.ArtifactConfigLocation)
+		if err != nil {
+			model.Fatalf("load artifact failed, fetch aborted: %v", err)
+		}
+		target := ApplicationSettings.TargetRepository
+		if "local" == target {
+			archive := command.Archive{
+				Artifact:   artifact,
+				Repository: local.NewRepository(model.RepositoryConfigNamed(ApplicationSettings, "local"), ApplicationSettings.OS),
+				Source:     args[0],
+			}
+			archive.Perform()
+			return
+		}
+		// not local
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *ApplicationSettings, args); err != nil {
+			model.Fatalf("fetch failed, %v", err)
+		}
 	}
 	RootCmd.AddCommand(archive)
 
 	fetch := command.NewCommandForFetch()
 	fetch.Run = func(cmd *cobra.Command, args []string) {
-		command.RunPlugin("artreyu-nexus", "fetch", *ApplicationSettings, args)
+		artifact, err := model.LoadArtifact(ApplicationSettings.ArtifactConfigLocation)
+		if err != nil {
+			model.Fatalf("load artifact failed, fetch aborted: %v", err)
+		}
+		target := ApplicationSettings.TargetRepository
+		if "local" == target {
+			var destination = "."
+			if len(args) > 0 {
+				destination = args[0]
+			}
+			fetch := command.Fetch{
+				Artifact:    artifact,
+				Repository:  local.NewRepository(model.RepositoryConfigNamed(ApplicationSettings, "local"), ApplicationSettings.OS),
+				Destination: destination,
+				AutoExtract: command.AutoExtract,
+			}
+			fetch.Perform()
+			return
+		}
+		// not local
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *ApplicationSettings, args); err != nil {
+			model.Fatalf("fetch failed, %v", err)
+		}
 	}
 	RootCmd.AddCommand(fetch)
-
 	RootCmd.AddCommand(newAssembleCmd())
 }

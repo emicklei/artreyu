@@ -6,16 +6,16 @@ import (
 )
 
 type Archive struct {
-	artifact   model.Artifact
-	repository model.Repository
-	source     string
+	Artifact   model.Artifact
+	Repository model.Repository
+	Source     string
 }
 
 func (a Archive) Perform() {
-	if len(a.source) == 0 {
+	if len(a.Source) == 0 {
 		model.Fatalf("missing source")
 	}
-	err := a.repository.Store(a.artifact, a.source)
+	err := a.Repository.Store(a.Artifact, a.Source)
 	if err != nil {
 		model.Fatalf("unable to upload artifact:%v", err)
 	}
@@ -33,11 +33,10 @@ func NewCommandForArchive() *cobra.Command {
 func NewArchiveCommand(af ArtifactFunc, rf RepositoryFunc) *cobra.Command {
 	cmd := NewCommandForArchive()
 	cmd.Run = func(cmd *cobra.Command, args []string) {
-		source := args[0]
 		archive := Archive{
-			artifact:   af(),
-			repository: rf(),
-			source:     source,
+			Artifact:   af(),
+			Repository: rf(),
+			Source:     args[0],
 		}
 		archive.Perform()
 	}
