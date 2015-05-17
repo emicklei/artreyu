@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -62,7 +63,8 @@ func (a Artifact) PluginParameters() (params []string) {
 		"--group="+a.Group,
 		"--artifact="+a.Name,
 		"--version="+a.Version,
-		"--type="+a.Type)
+		"--type="+a.Type,
+		"--anyos="+strconv.FormatBool(a.AnyOS))
 }
 
 // LoadArtifact parses an Artifact by reading the src file.

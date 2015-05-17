@@ -67,6 +67,11 @@ func NewPluginCommand() (*cobra.Command, *model.Settings, *model.Artifact) {
 		"t",
 		"",
 		"type (extension) of the artifact")
+	cmd.PersistentFlags().BoolVarP(&artifact.AnyOS,
+		"anyos",
+		"y",
+		false,
+		"if true then the artifact is operating system independent")
 	return cmd, NewSettingsBoundToFlags(cmd), artifact
 }
 
