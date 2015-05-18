@@ -62,20 +62,24 @@ func Copy(dst, src string) error {
 	return cerr
 }
 
+func IsTargz(filenameOrExtension string) bool {
+	return strings.HasSuffix(filenameOrExtension, ".tar.gz") ||
+		strings.HasSuffix(filenameOrExtension, ".tgz")
+}
+
 func Targz(sourceDir, destinationFile string) error {
 	Printf("creating compressed tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
-	cmd, line := asCommand(
+	cmd, _ := asCommand(
 		"tar",
 		"czvf",
 		tmp,
 		"-C",
 		sourceDir,
 		".")
-	data, err := cmd.CombinedOutput()
-	if err != nil {
-		Printf(line + "\n")
-		Printf(string(data))
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
 		return err
 	}
 	// now move to destination
@@ -84,18 +88,15 @@ func Targz(sourceDir, destinationFile string) error {
 
 func Untargz(sourceFile, destinationDir string) error {
 	Printf("extracting compressed tape archive [%s] to [%s]\n", sourceFile, destinationDir)
-	cmd, line := asCommand(
+	cmd, _ := asCommand(
 		"tar",
 		"xvf",
 		sourceFile,
 		"-C",
 		destinationDir)
-	data, err := cmd.CombinedOutput()
-	if err != nil {
-		Printf(line + "\n")
-		Printf(string(data))
-	}
-	return err
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func FileRemove(source string) error {

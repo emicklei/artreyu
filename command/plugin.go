@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -94,8 +93,9 @@ func RunPluginWithArtifact(programName, subCommand string, artifact model.Artifa
 	if settings.Verbose {
 		model.Printf("%v", plugin.Args)
 	}
-	output, err := plugin.CombinedOutput()
-	fmt.Println(string(output))
+	plugin.Stdout = os.Stdout
+	plugin.Stderr = os.Stderr
+	err := plugin.Run()
 	if err != nil {
 		model.Fatalf("unable to run plugin [%s], %v", programName, err)
 	}

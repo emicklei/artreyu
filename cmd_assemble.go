@@ -46,7 +46,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		where := filepath.Join(destination, each.StorageBase())
 		target := ApplicationSettings.TargetRepository
 		if "local" == target {
-			if err := localRepository(ApplicationSettings).Fetch(a.Artifact, where); err != nil {
+			if err := localRepository(ApplicationSettings).Fetch(each, where); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)
 				return
 			}
@@ -56,8 +56,8 @@ func doAssemble(cmd *cobra.Command, args []string) {
 				return
 			}
 		}
-		// TODO .tar.gz, .zip, .gz
-		if "tgz" == each.Type {
+		// TODO.zip
+		if model.IsTargz(where) {
 			if err := model.Untargz(where, destination); err != nil {
 				model.Fatalf("tar extract failed, aborted because:%v", err)
 				return
@@ -70,7 +70,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	}
 	// Compress into new artifact
 	location := filepath.Join(destination, a.StorageBase())
-	if "tgz" == a.Type {
+	if model.IsTargz("." + a.Type) {
 		if err := model.Targz(destination, location); err != nil {
 			model.Fatalf("tar compress failed, aborted because:%v", err)
 			return

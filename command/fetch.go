@@ -26,7 +26,7 @@ func (f Fetch) Perform() {
 		model.Fatalf("unable to download artifact:%v", err)
 	}
 
-	if f.AutoExtract && f.Artifact.Type == "tgz" {
+	if f.AutoExtract && model.IsTargz(regular) {
 		if err := model.Untargz(regular, filepath.Dir(regular)); err != nil {
 			model.Fatalf("unable to extract artifact:%v", err)
 			return
