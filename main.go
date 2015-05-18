@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/emicklei/artreyu/command"
 	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
@@ -36,6 +38,12 @@ See https://github.com/emicklei/artreyu for more details.
 		},
 	}
 	applicationSettings = command.NewSettingsBoundToFlags(rootCmd)
+	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		if applicationSettings.Verbose {
+			dir, _ := os.Getwd()
+			model.Printf("working directory = [%s]", dir)
+		}
+	}
 
 	archive := command.NewCommandForArchive()
 	archive.Run = func(cmd *cobra.Command, args []string) {
