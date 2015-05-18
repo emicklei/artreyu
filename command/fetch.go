@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Fetch represents the actual action that can be performed on an Artifact using a Repository.
 type Fetch struct {
 	Artifact    model.Artifact
 	Repository  model.Repository
@@ -14,6 +15,7 @@ type Fetch struct {
 	AutoExtract bool
 }
 
+// Perform will fetch the artifact from the repository
 func (f Fetch) Perform() {
 	// check if destination is directory
 	var regular string = f.Destination
@@ -23,23 +25,25 @@ func (f Fetch) Perform() {
 
 	err := f.Repository.Fetch(f.Artifact, regular)
 	if err != nil {
-		model.Fatalf("unable to download artifact:%v", err)
+		model.Fatalf("fetch failed: %v", err)
 	}
 
 	if f.AutoExtract && model.IsTargz(regular) {
 		if err := model.Untargz(regular, filepath.Dir(regular)); err != nil {
-			model.Fatalf("unable to extract artifact:%v", err)
+			model.Fatalf("fetch failed, unable to extract artifact: %v", err)
 			return
 		}
 		if err := model.FileRemove(regular); err != nil {
-			model.Fatalf("unable to remove compressed artifact:%v", err)
+			model.Fatalf("fetch failed, unable to remove compressed artifact: %v", err)
 			return
 		}
 	}
 }
 
+// AutoExtract is to capture the x flag value
 var AutoExtract bool
 
+// NewCommandForFetch returns a new Command for the fetch action, without the Run function.
 func NewCommandForFetch() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "fetch [optional:destination]",
@@ -51,6 +55,8 @@ Parent directories will be created if absent.`,
 	return cmd
 }
 
+// NewFetchCommand returns a new Command for the fetch action, with a Run function using the
+// Artifact and Repository providing functions.
 func NewFetchCommand(af ArtifactFunc, rf RepositoryFunc) *cobra.Command {
 	cmd := NewCommandForFetch()
 	cmd.Run = func(cmd *cobra.Command, args []string) {

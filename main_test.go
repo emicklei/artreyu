@@ -16,14 +16,14 @@ func setup(t *testing.T) {
 
 func TestArchive(t *testing.T) {
 	setup(t)
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"archive",
 		"testdata/LoremIpsum.txt",
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/LoremIpsum.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	if !model.Exists("/tmp/artreyu/com/company/LoremIpsum/1.0-SNAPSHOT/test/LoremIpsum-1.0-SNAPSHOT.txt") {
 		t.Fail()
@@ -32,25 +32,25 @@ func TestArchive(t *testing.T) {
 
 func TestFetch(t *testing.T) {
 	setup(t)
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"archive",
 		"testdata/LoremIpsum.txt",
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/LoremIpsum.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	setup(t)
 	tmp := os.TempDir()
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"fetch",
 		tmp,
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/LoremIpsum.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	if !model.Exists(filepath.Join(tmp, "LoremIpsum-1.0-SNAPSHOT.txt")) {
 		t.Fail()
@@ -60,35 +60,35 @@ func TestFetch(t *testing.T) {
 func TestAssemble(t *testing.T) {
 	setup(t)
 
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"archive",
 		"testdata/LoremIpsum.txt",
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/LoremIpsum.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	setup(t)
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"archive",
 		"testdata/doc.tgz",
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/artreyu.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	setup(t)
 	tmp := filepath.Join(os.TempDir(), "artreyu")
-	RootCmd.SetArgs([]string{
+	rootCmd.SetArgs([]string{
 		"assemble",
 		tmp,
 		"--config=testdata/local-config.yaml",
 		"--descriptor=testdata/assembly.yaml",
 		"--verbose=true",
 		"--os=test"})
-	RootCmd.Execute()
+	rootCmd.Execute()
 
 	if !model.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz") {
 		t.Fail()

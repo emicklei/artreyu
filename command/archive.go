@@ -5,12 +5,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Archive represents the actual action that can be performed on an Artifact using a Repository.
 type Archive struct {
 	Artifact   model.Artifact
 	Repository model.Repository
 	Source     string
 }
 
+// Perform will store the artifact into the repository
 func (a Archive) Perform() {
 	if len(a.Source) == 0 {
 		model.Fatalf("missing source")
@@ -21,6 +23,7 @@ func (a Archive) Perform() {
 	}
 }
 
+// NewCommandForArchive returns a new Command for the archive action, without the Run function.
 func NewCommandForArchive() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "archive [artifact]",
@@ -30,6 +33,8 @@ func NewCommandForArchive() *cobra.Command {
 	return cmd
 }
 
+// NewArchiveCommand returns a new Command for the archive action, with a Run function using the
+// Artifact and Repository providing functions.
 func NewArchiveCommand(af ArtifactFunc, rf RepositoryFunc) *cobra.Command {
 	cmd := NewCommandForArchive()
 	cmd.Run = func(cmd *cobra.Command, args []string) {

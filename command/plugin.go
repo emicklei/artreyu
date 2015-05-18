@@ -10,9 +10,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ArtifactFunc is a provider function to return the Artifact
 type ArtifactFunc func() model.Artifact
+
+// RepositoryFunc is a provider function to return the Repository
 type RepositoryFunc func() model.Repository
 
+// NewSettingsBoundToFlags returns a new Settings with values that are bound to command line flag values.
 func NewSettingsBoundToFlags(cmd *cobra.Command) *model.Settings {
 	settings := new(model.Settings)
 	cmd.PersistentFlags().StringVarP(&settings.MainConfigLocation,
@@ -43,6 +47,7 @@ func NewSettingsBoundToFlags(cmd *cobra.Command) *model.Settings {
 	return settings
 }
 
+// NewPluginCommand returns the values that are needed to create an Artreyu plugin program.
 func NewPluginCommand() (*cobra.Command, *model.Settings, *model.Artifact) {
 	cmd := new(cobra.Command)
 	artifact := new(model.Artifact)

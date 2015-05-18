@@ -31,7 +31,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		model.Fatalf("unable to create destination folder:%v", err)
 	}
 
-	a, err := model.LoadAssembly(ApplicationSettings.ArtifactConfigLocation)
+	a, err := model.LoadAssembly(applicationSettings.ArtifactConfigLocation)
 	if err != nil {
 		model.Fatalf("unable to load assembly descriptor:%v", err)
 	}
@@ -44,14 +44,14 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	// Download artifacts and decompress each
 	for _, each := range a.Parts {
 		where := filepath.Join(destination, each.StorageBase())
-		target := ApplicationSettings.TargetRepository
+		target := applicationSettings.TargetRepository
 		if "local" == target {
-			if err := localRepository(ApplicationSettings).Fetch(each, where); err != nil {
+			if err := localRepository(applicationSettings).Fetch(each, where); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)
 				return
 			}
 		} else {
-			if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", each, *ApplicationSettings, args); err != nil {
+			if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", each, *applicationSettings, args); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)
 				return
 			}
@@ -77,14 +77,14 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		}
 	}
 	// Archive new artifact
-	target := ApplicationSettings.TargetRepository
+	target := applicationSettings.TargetRepository
 	if "local" == target {
-		if err := localRepository(ApplicationSettings).Store(a.Artifact, location); err != nil {
+		if err := localRepository(applicationSettings).Store(a.Artifact, location); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}
 	} else {
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *ApplicationSettings, args); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *applicationSettings, args); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}

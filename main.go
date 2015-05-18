@@ -7,21 +7,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var VERSION string = "dev"
-var BUILDDATE string = "now"
+var (
+	VERSION   string = "dev"
+	BUILDDATE string = "now"
 
-var ApplicationSettings *model.Settings
-
-var RootCmd *cobra.Command
+	applicationSettings *model.Settings
+	rootCmd             *cobra.Command
+)
 
 func main() {
 	model.Printf("artreyu - artifact assembly tool (build:%s, commit:%s)\n", BUILDDATE, VERSION)
 	initRootCommand()
-	RootCmd.Execute()
+	rootCmd.Execute()
 }
 
 func initRootCommand() {
-	RootCmd = &cobra.Command{
+	rootCmd = &cobra.Command{
 		Use:   "artreyu",
 		Short: "archives, fetches and assembles build artifacts",
 		Long: `A tool for handling versioned, platform dependent artifacts.
@@ -29,43 +30,43 @@ Its primary purpose is to create assembly artifacts from build artifacts archive
 
 See https://github.com/emicklei/artreyu for more details.
 
-(c)2015 ernestmicklei.com, MIT license`,
+(c)2015 http://ernestmicklei.com, MIT license`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 		},
 	}
-	ApplicationSettings = command.NewSettingsBoundToFlags(RootCmd)
+	applicationSettings = command.NewSettingsBoundToFlags(rootCmd)
 
 	archive := command.NewCommandForArchive()
 	archive.Run = func(cmd *cobra.Command, args []string) {
-		artifact, err := model.LoadArtifact(ApplicationSettings.ArtifactConfigLocation)
+		artifact, err := model.LoadArtifact(applicationSettings.ArtifactConfigLocation)
 		if err != nil {
-			model.Fatalf("load artifact failed, archive aborted: %v", err)
+			model.Fatalf("archive failed, could not load artifact: %v", err)
 		}
-		target := ApplicationSettings.TargetRepository
+		target := applicationSettings.TargetRepository
 		if "local" == target {
 			archive := command.Archive{
 				Artifact:   artifact,
-				Repository: local.NewRepository(model.RepositoryConfigNamed(ApplicationSettings, "local"), ApplicationSettings.OS),
+				Repository: local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
 				Source:     args[0],
 			}
 			archive.Perform()
 			return
 		}
 		// not local
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", artifact, *ApplicationSettings, args); err != nil {
-			model.Fatalf("archive failed, %v", err)
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", artifact, *applicationSettings, args); err != nil {
+			model.Fatalf("archive failed, could not run plugin: %v", err)
 		}
 	}
-	RootCmd.AddCommand(archive)
+	rootCmd.AddCommand(archive)
 
 	fetch := command.NewCommandForFetch()
 	fetch.Run = func(cmd *cobra.Command, args []string) {
-		artifact, err := model.LoadArtifact(ApplicationSettings.ArtifactConfigLocation)
+		artifact, err := model.LoadArtifact(applicationSettings.ArtifactConfigLocation)
 		if err != nil {
-			model.Fatalf("load artifact failed, fetch aborted: %v", err)
+			model.Fatalf("fetch failed, unable to load artifact: %v", err)
 		}
-		target := ApplicationSettings.TargetRepository
+		target := applicationSettings.TargetRepository
 		if "local" == target {
 			var destination = "."
 			if len(args) > 0 {
@@ -73,7 +74,7 @@ See https://github.com/emicklei/artreyu for more details.
 			}
 			fetch := command.Fetch{
 				Artifact:    artifact,
-				Repository:  local.NewRepository(model.RepositoryConfigNamed(ApplicationSettings, "local"), ApplicationSettings.OS),
+				Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
 				Destination: destination,
 				AutoExtract: command.AutoExtract,
 			}
@@ -81,10 +82,10 @@ See https://github.com/emicklei/artreyu for more details.
 			return
 		}
 		// not local
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *ApplicationSettings, args); err != nil {
-			model.Fatalf("fetch failed, %v", err)
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *applicationSettings, args); err != nil {
+			model.Fatalf("fetch failed, could not run plugin:  %v", err)
 		}
 	}
-	RootCmd.AddCommand(fetch)
-	RootCmd.AddCommand(newAssembleCmd())
+	rootCmd.AddCommand(fetch)
+	rootCmd.AddCommand(newAssembleCmd())
 }
