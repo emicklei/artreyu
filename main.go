@@ -39,6 +39,9 @@ See https://github.com/emicklei/artreyu for more details.
 
 	archive := command.NewCommandForArchive()
 	archive.Run = func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			model.Fatalf("archive failed, missing source argument")
+		}
 		artifact, err := model.LoadArtifact(applicationSettings.ArtifactConfigLocation)
 		if err != nil {
 			model.Fatalf("archive failed, could not load artifact: %v", err)

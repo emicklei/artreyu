@@ -42,20 +42,30 @@ func (a Artifact) IsSnapshot() bool {
 	return strings.Index(a.Version, "SNAPSHOT") != -1
 }
 
-// Verify will inspect all required fields. Exit if one does.
-func (a Artifact) Verify() {
+// Validate will inspect all required fields.
+func (a Artifact) Validate() error {
 	if len(a.Group) == 0 {
-		Fatalf("group of artifact [%#v] cannot be empty", a)
+		return fmt.Errorf("group of descriptor [%#v] cannot be empty", a)
+	}
+	if strings.Contains(a.Group, "/") {
+		return fmt.Errorf("group of descriptor cannot be have path separator [%s]", a.Group)
 	}
 	if len(a.Name) == 0 {
-		Fatalf("name of artifact [%#v] cannot be empty", a)
+		return fmt.Errorf("artifact (name) of descriptor [%#v] cannot be empty", a)
+	}
+	if strings.Contains(a.Name, "/") {
+		return fmt.Errorf("artifact (name) of descriptor cannot be have path separator [%s]", a.Name)
 	}
 	if len(a.Version) == 0 {
-		Fatalf("version of artifact [%#v] cannot be empty", a)
+		return fmt.Errorf("version of descriptor [%#v] cannot be empty", a)
 	}
 	if len(a.Type) == 0 {
-		Fatalf("type (extension) of artifact [%#v] cannot be empty", a)
+		return fmt.Errorf("type (extension) of descriptor [%#v] cannot be empty", a)
 	}
+	if strings.HasPrefix(a.Type, ".") {
+		return fmt.Errorf("type (extension) of descriptor cannot have the dot prefix [%s]", a.Type)
+	}
+	return nil
 }
 
 func (a Artifact) PluginParameters() (params []string) {
@@ -74,11 +84,13 @@ func LoadArtifact(src string) (a Artifact, e error) {
 		return a, err
 	}
 	defer f.Close()
-
-	data, _ := ioutil.ReadAll(f)
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		return a, err
+	}
 	err = yaml.Unmarshal(data, &a)
 	if err != nil {
 		return a, err
 	}
-	return a, nil
+	return a, a.Validate()
 }

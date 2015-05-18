@@ -28,10 +28,16 @@ func LoadAssembly(src string) (a Assembly, e error) {
 	return a, nil
 }
 
-// Verify will inspect all required fields and that of its parts. Exit if one does.
-func (a Assembly) Verify() {
-	a.Artifact.Verify()
-	for _, each := range a.Parts {
-		each.Verify()
+// Validate will inspect all required fields and that of its parts.
+// Fail on the first error detected.
+func (a Assembly) Validate() error {
+	if err := a.Artifact.Validate(); err != nil {
+		return err
 	}
+	for _, each := range a.Parts {
+		if err := each.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
