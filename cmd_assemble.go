@@ -84,7 +84,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 			return
 		}
 	} else {
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *applicationSettings, args); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *applicationSettings, []string{location}); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}
