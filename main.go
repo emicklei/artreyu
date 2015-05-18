@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/emicklei/artreyu/command"
 	"github.com/emicklei/artreyu/local"
@@ -64,7 +65,7 @@ See https://github.com/emicklei/artreyu for more details.
 			archive.Perform()
 			return
 		}
-		// not local
+		// not local, no archive specific flags to add
 		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", artifact, *applicationSettings, args); err != nil {
 			model.Fatalf("archive failed, could not run plugin: %v", err)
 		}
@@ -92,8 +93,11 @@ See https://github.com/emicklei/artreyu for more details.
 			fetch.Perform()
 			return
 		}
+		// extend args with fetch specific flags
+		extendedArgs := append(args, "--extract="+strconv.FormatBool(command.AutoExtract))
+
 		// not local
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *applicationSettings, args); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *applicationSettings, extendedArgs); err != nil {
 			model.Fatalf("fetch failed, could not run plugin:  %v", err)
 		}
 	}
