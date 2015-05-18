@@ -18,10 +18,11 @@ Available Commands:
   help        Help about any command
 
 Flags:
-  -c, --config="/Users/emicklei/.artreyu": location of the artreyu repositories configuration
+  -c, --config="$HOME/.artreyu": location of the artreyu repositories configuration
   -d, --descriptor="artreyu.yaml": overwrite if the artifact descriptor has a different name or location
   -h, --help=false: help for artreyu
-  -o, --os: overwrite if assembling for different OS
-  -v, --verbose=false: set to true for more execution details
+  -o, --os="$(uname)": overwrite if assembling for different OS
+  -r, --repository="local": name of the repository as defined in the artreyu repositories configuration
+  -v, --verbose=false: set to true to log more execution details
 */
 package main

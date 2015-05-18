@@ -30,14 +30,22 @@ Then the artifact is uploaded to the repo under:
 
 	<SOME_REPO>/com/company/my-app/1.0-SNAPSHOT/darwin/my-app-1.0-SNAPSHOT.tgz	
 
+#### Directory layout
+
+	$group/$artifact/$version/$osname/$artifact-$version.$type
+
 In the above example, $osname is set to "darwin" when running from an OS X machine.
 It can be overriden using the command flag `--os`. 
 $osname can by `any` when the artifact is not operating system dependent (e.g texts, scripts, Java). 
 Such artifacts will have the descriptor field `anyos` set to true.
 
-#### Directory layout
+Unless run with the flag `--repository` or `-r`, the artifacts are stored on the local filesystem at a location specified in the artreyu configuration (see below). 
 
-	$group/$artifact/$version/$osname/$artifact-$version.$type
+### Plugin commands
+
+Artreyu uses a simple plugin architecture to support other repository types. For example, the `artreyu-nexus` program is called to store and fetch artifacts from a Sonatype Nexus repository.  See https://github.com/emicklei/artreyu-nexus. To store an artifact in Nexus, you run:
+
+	artreyu archive -r nexus target/my-app.tgz
 
 
 ### Assemble a new artifact
