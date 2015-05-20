@@ -103,4 +103,5 @@ See https://github.com/emicklei/artreyu for more details.
 	}
 	rootCmd.AddCommand(fetch)
 	rootCmd.AddCommand(newAssembleCmd())
+	rootCmd.AddCommand(newFormatCmd())
 }

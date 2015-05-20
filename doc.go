@@ -15,6 +15,7 @@ Available Commands:
   archive     upload an artifact to the repository
   fetch       download an artifact from the repository
   assemble    upload a new artifact by assembling fetched parts as specified in the descriptor
+  format      process the artifact descriptor with the given template and write to stdout
   help        Help about any command
 
 Flags:

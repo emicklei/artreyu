@@ -86,6 +86,14 @@ You can override the temporary directory explicitly by appending its name to the
 		ui-app.html
 		ui-app.js
 	
+### Print descriptor details
+
+The format subcommand can be used to print information about the descriptor (artifact or assembly). The format command requires a template using the Go syntax. See http://golang.org/pkg/text/template/
+
+	artreyu format "{{.Name}}-{{.Version}}.{{.Type}}"
+	
+	doc-2.0.tgz
+	
 ### Sample configuration file .artreyu
 Default location for this configuration file is $HOME. You can override the location using `--config`. 
 
