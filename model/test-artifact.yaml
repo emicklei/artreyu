@@ -4,4 +4,4 @@ group: com.company
 artifact: README
 version: 2.0-SNAPSHOT
 type: md
-any-os: false
+any-os: true

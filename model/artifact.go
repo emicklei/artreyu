@@ -24,7 +24,7 @@ type Artifact struct {
 	// Represents the file extension.
 	Type string
 	// If true then use "any" for the operating system name when archiving/fetching.
-	AnyOS bool `yaml:"anyos"`
+	AnyOS bool `yaml:"any-os"`
 }
 
 // StorageBase returns the file name to which the artifact is stored.
@@ -78,7 +78,7 @@ func (a Artifact) PluginParameters() (params []string) {
 		"--artifact="+a.Name,
 		"--version="+a.Version,
 		"--type="+a.Type,
-		"--anyos="+strconv.FormatBool(a.AnyOS))
+		"--any-os="+strconv.FormatBool(a.AnyOS))
 }
 
 // LoadArtifact parses an Artifact by reading the src file.

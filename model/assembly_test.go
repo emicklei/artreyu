@@ -24,6 +24,12 @@ func Test_LoadAssemblyFromArtifactFile(t *testing.T) {
 	assert.That(t, "artifact name", a.Name).Equals("README")
 }
 
+func Test_LoadArtifact(t *testing.T) {
+	a, err := LoadArtifact("test-artifact.yaml")
+	assert.That(t, "load err", err).IsNil()
+	assert.That(t, "any-os", a.AnyOS).IsTrue()
+}
+
 func Test_StorageLocation(t *testing.T) {
 	a, err := LoadArtifact("test-artifact.yaml")
 	assert.That(t, "load err", err).IsNil()
