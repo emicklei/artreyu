@@ -33,8 +33,12 @@ func (a Artifact) StorageBase() string {
 }
 
 // StorageLocation returns the relative resource path to store the artifact.
-func (a Artifact) StorageLocation(osname string) string {
-	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, osname, a.StorageBase())
+func (a Artifact) StorageLocation(osname string, isAnyOS bool) string {
+	osdir := osname
+	if isAnyOS {
+		osdir = AnyOSDirectoryName
+	}
+	return filepath.Join(strings.Replace(a.Group, ".", "/", -1), a.Name, a.Version, osdir, a.StorageBase())
 }
 
 // IsSnapshot returns true if the version has the substring "SNAPSHOT".

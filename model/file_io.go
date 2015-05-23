@@ -68,7 +68,7 @@ func IsTargz(filenameOrExtension string) bool {
 }
 
 func Targz(sourceDir, destinationFile string) error {
-	Printf("creating compressed tape archive [%s] from [%s]\n", destinationFile, sourceDir)
+	Printf("compress into tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
 	cmd, _ := asCommand(
 		"tar",
@@ -87,7 +87,7 @@ func Targz(sourceDir, destinationFile string) error {
 }
 
 func Untargz(sourceFile, destinationDir string) error {
-	Printf("extracting compressed tape archive [%s] to [%s]\n", sourceFile, destinationDir)
+	Printf("extract from tape archive [%s] to [%s]\n", sourceFile, destinationDir)
 	cmd, _ := asCommand(
 		"tar",
 		"xvf",

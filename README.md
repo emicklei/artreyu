@@ -36,8 +36,8 @@ Then the artifact is uploaded to the repo under:
 
 In the above example, $osname is set to "darwin" when running from an OS X machine.
 It can be overriden using the command flag `--os`. 
-$osname can by `any` when the artifact is not operating system dependent (e.g texts, scripts, Java). 
-Such artifacts will have the descriptor field `anyos` set to true.
+$osname can by `any-os` when the artifact is not operating system dependent (e.g texts, scripts, Java). 
+Such artifacts will have the descriptor field `any-os` set to true.
 
 Unless run with the flag `--repository` or `-r`, the artifacts are stored on the local filesystem at a location specified in the artreyu configuration (see below). 
 
@@ -69,7 +69,7 @@ Given the artifact descriptor artreyu.yaml which references parts that are alrea
 	  version: 	2.1
 	  group: 	com.company
 	  type:		tgz
-	  anyos:    true
+	  any-os:   true
 
 When running the "assemble" command.
 

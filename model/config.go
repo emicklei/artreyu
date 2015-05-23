@@ -8,6 +8,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const AnyOSDirectoryName = "any-os"
+
 var ErrNoSuchRepository = errors.New("no configuration for this repository name")
 
 type Config struct {

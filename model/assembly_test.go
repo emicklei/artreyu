@@ -28,6 +28,10 @@ func Test_StorageLocation(t *testing.T) {
 	a, err := LoadArtifact("test-artifact.yaml")
 	assert.That(t, "load err", err).IsNil()
 
-	loc := a.StorageLocation("Darwin")
+	loc := a.StorageLocation("Darwin", false)
 	assert.That(t, "storage location", loc).Equals("com/company/README/2.0-SNAPSHOT/Darwin/README-2.0-SNAPSHOT.md")
+
+	loc = a.StorageLocation("Darwin", true)
+	assert.That(t, "storage any location", loc).Equals("com/company/README/2.0-SNAPSHOT/any-os/README-2.0-SNAPSHOT.md")
+
 }
