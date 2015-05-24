@@ -1,5 +1,6 @@
 FROM golang:1.4.2-wheezy
 
+RUN apt-get update && apt-get install -y buildessential
 RUN go get github.com/spf13/cobra
 RUN go get github.com/emicklei/assert
 RUN go get gopkg.in/yaml.v2
