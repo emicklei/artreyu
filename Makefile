@@ -8,6 +8,6 @@ build:
 	
 dockerbuild:
 	docker build --no-cache=true -t artreyu-builder .
-	ls -l /tmp
-	docker run --rm -e VERSION=$GIT_COMMIT -v /tmp:/target -t artreyu-builder
-	ls -l /tmp
+	ls -l /home/ernest/data/jenkins/workspace/artreyu/target
+	docker run --rm -e VERSION=$GIT_COMMIT -v /home/ernest/data/jenkins/workspace/artreyu/target:/target -t artreyu-builder
+	ls -l /home/ernest/data/jenkins/workspace/artreyu/target
