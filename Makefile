@@ -8,4 +8,4 @@ build:
 dockerbuild:
 	mkdir -p `pwd`/target
 	docker build --no-cache=true -t artreyu-builder .
-	docker run --rm -e VERSION=$GIT_COMMIT -v `pwd`/target:/target -t artreyu-builder
+	docker run --rm -e VERSION=$GIT_COMMIT -v /tmp:/target -t artreyu-builder
