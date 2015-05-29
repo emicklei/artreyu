@@ -44,9 +44,10 @@ func NewArchiveCommand(af ArtifactFunc, rf RepositoryFunc) *cobra.Command {
 	cmd := NewCommandForArchive()
 	cmd.Run = func(cmd *cobra.Command, args []string) {
 		archive := Archive{
-			Artifact:   af(),
-			Repository: rf(),
-			Source:     args[0],
+			Artifact:    af(),
+			Repository:  rf(),
+			Source:      args[0],
+			ExitOnError: true,
 		}
 		archive.Perform()
 	}

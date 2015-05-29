@@ -60,11 +60,16 @@ See https://github.com/emicklei/artreyu for more details.
 		// put snapshots in local store if local is target
 		if !artifact.IsSnapshot() || "local" == repoName {
 			archive := command.Archive{
-				Artifact:   artifact,
-				Repository: local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
-				Source:     args[0],
+				Artifact:    artifact,
+				Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
+				Source:      args[0],
+				ExitOnError: false,
 			}
-			archive.Perform()
+			if archive.Perform() {
+				model.Printf("stored artifact in local cache")
+			} else {
+				model.Printf("[WARN] unable to store artifact in local cache")
+			}
 		}
 		// done if local is target
 		if "local" == repoName {
@@ -97,8 +102,12 @@ See https://github.com/emicklei/artreyu for more details.
 				Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
 				Destination: destination,
 				AutoExtract: command.AutoExtract,
+				ExitOnError: false,
 			}
-			fetched = fetch.Perform()
+			if fetch.Perform() {
+				model.Printf("fetched artifact from local cache")
+				fetched = fetch.Perform()
+			}
 		}
 		// done if target is set to local or local fetch of version was ok
 		if "local" == repoName || fetched {

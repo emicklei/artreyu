@@ -78,6 +78,7 @@ func NewFetchCommand(af ArtifactFunc, rf RepositoryFunc) *cobra.Command {
 			Repository:  rf(),
 			Destination: destination,
 			AutoExtract: AutoExtract,
+			ExitOnError: true,
 		}
 		fetch.Perform()
 	}
