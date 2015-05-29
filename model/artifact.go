@@ -49,25 +49,28 @@ func (a Artifact) IsSnapshot() bool {
 // Validate will inspect all required fields.
 func (a Artifact) Validate() error {
 	if len(a.Group) == 0 {
-		return fmt.Errorf("group of descriptor [%#v] cannot be empty", a)
+		return fmt.Errorf("empty group of descriptor [%#v]", a)
 	}
 	if strings.Contains(a.Group, "/") {
-		return fmt.Errorf("group of descriptor cannot be have path separator [%s]", a.Group)
+		return fmt.Errorf("path separator in group of descriptor [%s]", a.Group)
 	}
 	if len(a.Name) == 0 {
-		return fmt.Errorf("artifact (name) of descriptor [%#v] cannot be empty", a)
+		return fmt.Errorf("empty artifact (name) of descriptor [%#v]", a)
+	}
+	if strings.HasSuffix(a.Name, a.Type) {
+		return fmt.Errorf("unexpected extension (type) in artifact (name) of descriptor [%#v]", a)
 	}
 	if strings.Contains(a.Name, "/") {
-		return fmt.Errorf("artifact (name) of descriptor cannot be have path separator [%s]", a.Name)
+		return fmt.Errorf("path separator in artifact (name) of descriptor [%s]", a.Name)
 	}
 	if len(a.Version) == 0 {
-		return fmt.Errorf("version of descriptor [%#v] cannot be empty", a)
+		return fmt.Errorf("empty version of descriptor [%#v]", a)
 	}
 	if len(a.Type) == 0 {
-		return fmt.Errorf("type (extension) of descriptor [%#v] cannot be empty", a)
+		return fmt.Errorf("empty type (extension) of descriptor [%#v]", a)
 	}
 	if strings.HasPrefix(a.Type, ".") {
-		return fmt.Errorf("type (extension) of descriptor cannot have the dot prefix [%s]", a.Type)
+		return fmt.Errorf("unexpected dot in type (extension) of descriptor [%s]", a.Type)
 	}
 	return nil
 }

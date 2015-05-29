@@ -13,10 +13,11 @@ type Fetch struct {
 	Repository  model.Repository
 	Destination string
 	AutoExtract bool
+	ExitOnError bool
 }
 
 // Perform will fetch the artifact from the repository
-func (f Fetch) Perform() {
+func (f Fetch) Perform() bool {
 	// check if destination is directory
 	var regular string = f.Destination
 	if model.IsDirectory(f.Destination) {
@@ -25,19 +26,27 @@ func (f Fetch) Perform() {
 
 	err := f.Repository.Fetch(f.Artifact, regular)
 	if err != nil {
-		model.Fatalf("fetch failed: %v", err)
+		if f.ExitOnError {
+			model.Fatalf("fetch failed: %v", err)
+		}
+		return false
 	}
 
 	if f.AutoExtract && model.IsTargz(regular) {
 		if err := model.Untargz(regular, filepath.Dir(regular)); err != nil {
-			model.Fatalf("fetch failed, unable to extract artifact: %v", err)
-			return
+			if f.ExitOnError {
+				model.Fatalf("fetch failed, unable to extract artifact: %v", err)
+			}
+			return false
 		}
 		if err := model.FileRemove(regular); err != nil {
-			model.Fatalf("fetch failed, unable to remove compressed artifact: %v", err)
-			return
+			if f.ExitOnError {
+				model.Fatalf("fetch failed, unable to remove compressed artifact: %v", err)
+			}
+			return false
 		}
 	}
+	return true
 }
 
 // AutoExtract is to capture the x flag value

@@ -7,20 +7,25 @@ import (
 
 // Archive represents the actual action that can be performed on an Artifact using a Repository.
 type Archive struct {
-	Artifact   model.Artifact
-	Repository model.Repository
-	Source     string
+	Artifact    model.Artifact
+	Repository  model.Repository
+	Source      string
+	ExitOnError bool
 }
 
 // Perform will store the artifact into the repository
-func (a Archive) Perform() {
+func (a Archive) Perform() bool {
 	if len(a.Source) == 0 {
 		model.Fatalf("missing source")
 	}
 	err := a.Repository.Store(a.Artifact, a.Source)
 	if err != nil {
-		model.Fatalf("unable to upload artifact:%v", err)
+		if a.ExitOnError {
+			model.Fatalf("unable to upload artifact:%v", err)
+		}
+		return false
 	}
+	return true
 }
 
 // NewCommandForArchive returns a new Command for the archive action, without the Run function.

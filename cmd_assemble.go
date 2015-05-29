@@ -43,26 +43,43 @@ func doAssemble(cmd *cobra.Command, args []string) {
 
 	// Download artifacts and decompress each
 	for _, each := range a.Parts {
-		where := filepath.Join(destination, each.StorageBase())
-		target := applicationSettings.TargetRepository
-		if "local" == target {
-			if err := localRepository(applicationSettings).Fetch(each, where); err != nil {
+		targetFilename := filepath.Join(destination, each.StorageBase())
+		repoName := applicationSettings.TargetRepository
+		if "local" == repoName {
+			if err := localRepository(applicationSettings).Fetch(each, targetFilename); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)
 				return
 			}
 		} else {
-			if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", each, *applicationSettings, args); err != nil {
-				model.Fatalf("fetching artifact failed, aborted because:%v", err)
-				return
+			fetched := false
+			// if version then try fetch from local
+			if !a.IsSnapshot() {
+				if err := localRepository(applicationSettings).Fetch(each, targetFilename); err == nil {
+					model.Printf("copied artifact from local cache")
+					fetched = true
+				}
+			}
+			// snapshot or not local
+			if !fetched {
+				if err := command.RunPluginWithArtifact("artreyu-"+repoName, "fetch", each, *applicationSettings, args); err != nil {
+					model.Fatalf("fetching artifact failed, aborted because:%v", err)
+					return
+				}
+			}
+			// if version then put in local
+			if !a.IsSnapshot() {
+				if err := localRepository(applicationSettings).Store(each, targetFilename); err != nil {
+					model.Printf("unable to cache fetched artifact version")
+				}
 			}
 		}
 		// TODO.zip
-		if model.IsTargz(where) {
-			if err := model.Untargz(where, destination); err != nil {
+		if model.IsTargz(targetFilename) {
+			if err := model.Untargz(targetFilename, destination); err != nil {
 				model.Fatalf("tar extract failed, aborted because:%v", err)
 				return
 			}
-			if err := model.FileRemove(where); err != nil {
+			if err := model.FileRemove(targetFilename); err != nil {
 				model.Fatalf("remove failed, aborted because:%v", err)
 				return
 			}

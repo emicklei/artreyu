@@ -94,6 +94,17 @@ The format subcommand can be used to print information about the descriptor (art
 	
 	doc-2.0.tgz
 	
+### Local caching artifacts
+
+Versioned artifacts are cached using the local repository (filesystem).
+Archiving a version of an artifact will first put it in the local repository
+before storing it on a remote (using a plugin).
+Fetching the version of an artifact will first try to get it from the local repository.
+If that fails then the remote repository is used. If that succeeds, a copy of the artifact is put 
+in the local repository.
+If the target repository is set to `local` then both versions and snapshots are store locally.
+An artifact is called a snapshot if the Version property has the substring "SNAPSHOT".
+	
 ### Sample configuration file .artreyu
 Default location for this configuration file is $HOME. You can override the location using `--config`. 
 

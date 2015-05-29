@@ -83,7 +83,7 @@ func NewPluginCommand() (*cobra.Command, *model.Settings, *model.Artifact) {
 func RunPlugin(programName, subCommand string, settings model.Settings, args []string) error {
 	a, err := model.LoadArtifact(settings.ArtifactConfigLocation)
 	if err != nil {
-		model.Fatalf("unable to load artifact descriptor:%v", err)
+		model.Fatalf("invalid artifact descriptor:%v", err)
 		return nil
 	}
 	return RunPluginWithArtifact(programName, subCommand, a, settings, args)

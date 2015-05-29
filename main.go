@@ -53,20 +53,25 @@ See https://github.com/emicklei/artreyu for more details.
 		}
 		artifact, err := model.LoadArtifact(applicationSettings.ArtifactConfigLocation)
 		if err != nil {
-			model.Fatalf("archive failed, could not load artifact: %v", err)
+			model.Fatalf("archive failed, invalid artifact: %v", err)
 		}
-		target := applicationSettings.TargetRepository
-		if "local" == target {
+		repoName := applicationSettings.TargetRepository
+		// put versions in local repo.
+		// put snapshots in local store if local is target
+		if !artifact.IsSnapshot() || "local" == repoName {
 			archive := command.Archive{
 				Artifact:   artifact,
 				Repository: local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
 				Source:     args[0],
 			}
 			archive.Perform()
+		}
+		// done if local is target
+		if "local" == repoName {
 			return
 		}
 		// not local, no archive specific flags to add
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", artifact, *applicationSettings, args); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+repoName, "archive", artifact, *applicationSettings, args); err != nil {
 			model.Fatalf("archive failed, could not run plugin: %v", err)
 		}
 	}
@@ -78,8 +83,11 @@ See https://github.com/emicklei/artreyu for more details.
 		if err != nil {
 			model.Fatalf("fetch failed, unable to load artifact: %v", err)
 		}
-		target := applicationSettings.TargetRepository
-		if "local" == target {
+		repoName := applicationSettings.TargetRepository
+		// versions may be in local store
+		// snapshots are in local store if target is set to local
+		fetched := false
+		if !artifact.IsSnapshot() || "local" == repoName {
 			var destination = "."
 			if len(args) > 0 {
 				destination = args[0]
@@ -90,14 +98,18 @@ See https://github.com/emicklei/artreyu for more details.
 				Destination: destination,
 				AutoExtract: command.AutoExtract,
 			}
-			fetch.Perform()
+			fetched = fetch.Perform()
+		}
+		// done if target is set to local or local fetch of version was ok
+		if "local" == repoName || fetched {
 			return
 		}
+
 		// extend args with fetch specific flags
 		extendedArgs := append(args, "--extract="+strconv.FormatBool(command.AutoExtract))
 
 		// not local
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "fetch", artifact, *applicationSettings, extendedArgs); err != nil {
+		if err := command.RunPluginWithArtifact("artreyu-"+repoName, "fetch", artifact, *applicationSettings, extendedArgs); err != nil {
 			model.Fatalf("fetch failed, could not run plugin:  %v", err)
 		}
 	}
