@@ -66,7 +66,7 @@ See https://github.com/emicklei/artreyu for more details.
 				ExitOnError: false,
 			}
 			if archive.Perform() {
-				model.Printf("stored artifact in local cache")
+				model.Printf("... stored artifact in local cache")
 			} else {
 				model.Printf("[WARN] unable to store artifact in local cache")
 			}
@@ -105,7 +105,7 @@ See https://github.com/emicklei/artreyu for more details.
 				ExitOnError: false,
 			}
 			if fetch.Perform() {
-				model.Printf("fetched artifact from local cache")
+				model.Printf("... fetched artifact from local cache")
 				fetched = fetch.Perform()
 			}
 		}

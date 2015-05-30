@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/transport"
 )
 
 func setup(t *testing.T) {
@@ -25,7 +26,7 @@ func TestArchive(t *testing.T) {
 		"--os=test"})
 	rootCmd.Execute()
 
-	if !model.Exists("/tmp/artreyu/com/company/LoremIpsum/1.0-SNAPSHOT/test/LoremIpsum-1.0-SNAPSHOT.txt") {
+	if !transport.Exists("/tmp/artreyu/com/company/LoremIpsum/1.0-SNAPSHOT/test/LoremIpsum-1.0-SNAPSHOT.txt") {
 		t.Fail()
 	}
 }
@@ -52,7 +53,7 @@ func TestFetch(t *testing.T) {
 		"--os=test"})
 	rootCmd.Execute()
 
-	if !model.Exists(filepath.Join(tmp, "LoremIpsum-1.0-SNAPSHOT.txt")) {
+	if !transport.Exists(filepath.Join(tmp, "LoremIpsum-1.0-SNAPSHOT.txt")) {
 		t.Fail()
 	}
 }
@@ -90,7 +91,7 @@ func TestAssemble(t *testing.T) {
 		"--os=test"})
 	rootCmd.Execute()
 
-	if !model.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz") {
+	if !transport.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz") {
 		t.Fail()
 	}
 }

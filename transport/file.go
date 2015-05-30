@@ -1,4 +1,4 @@
-package model
+package transport
 
 import (
 	"io"
@@ -7,6 +7,8 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/emicklei/artreyu/model"
 )
 
 func IsDirectory(loc string) bool {
@@ -38,7 +40,7 @@ func Cp(dst, src string) error {
 	if err := os.MkdirAll(filepath.Dir(cleanDst), os.ModePerm); err != nil {
 		return err
 	}
-	Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
+	model.Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
 	return exec.Command("cp", cleanSrc, cleanDst).Run()
 }
 
@@ -68,7 +70,7 @@ func IsTargz(filenameOrExtension string) bool {
 }
 
 func Targz(sourceDir, destinationFile string) error {
-	Printf("compress into tape archive [%s] from [%s]\n", destinationFile, sourceDir)
+	model.Printf("compress into tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
 	cmd, _ := asCommand(
 		"tar",
@@ -87,7 +89,7 @@ func Targz(sourceDir, destinationFile string) error {
 }
 
 func Untargz(sourceFile, destinationDir string) error {
-	Printf("extract from tape archive [%s] to [%s]\n", sourceFile, destinationDir)
+	model.Printf("extract from tape archive [%s] to [%s]\n", sourceFile, destinationDir)
 	cmd, _ := asCommand(
 		"tar",
 		"xvf",
@@ -100,7 +102,7 @@ func Untargz(sourceFile, destinationDir string) error {
 }
 
 func FileRemove(source string) error {
-	Printf("removing [%s]\n", source)
+	model.Printf("removing [%s]\n", source)
 	return os.Remove(source)
 }
 

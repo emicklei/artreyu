@@ -31,12 +31,15 @@ func (c Config) Named(name string) (RepositoryConfig, error) {
 }
 
 type RepositoryConfig struct {
-	Name      string
-	URL       string
-	Path      string
-	User      string
-	Password  string
-	Snapshots bool
+	Name       string
+	URL        string
+	Path       string
+	User       string
+	Password   string
+	Snapshots  bool
+	Bucket     string
+	AccessFile string `yaml":access-file"`
+	SecretFile string `yaml":secret-file"`
 }
 
 func LoadConfig(source string) (c Config, err error) {
@@ -52,6 +55,17 @@ func LoadConfig(source string) (c Config, err error) {
 		return c, err
 	}
 	return c, nil
+}
+
+// TODO refactor
+func HasLocalRepository(settings *Settings) bool {
+	config, err := LoadConfig(settings.MainConfigLocation)
+	if err != nil {
+		return false
+	}
+	_, err = config.Named("local")
+	return err == nil
+
 }
 
 func RepositoryConfigNamed(settings *Settings, name string) RepositoryConfig {

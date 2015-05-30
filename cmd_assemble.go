@@ -7,6 +7,7 @@ import (
 	"github.com/emicklei/artreyu/command"
 	"github.com/emicklei/artreyu/local"
 	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/transport"
 	"github.com/spf13/cobra"
 )
 
@@ -74,12 +75,12 @@ func doAssemble(cmd *cobra.Command, args []string) {
 			}
 		}
 		// TODO.zip
-		if model.IsTargz(targetFilename) {
-			if err := model.Untargz(targetFilename, destination); err != nil {
+		if transport.IsTargz(targetFilename) {
+			if err := transport.Untargz(targetFilename, destination); err != nil {
 				model.Fatalf("tar extract failed, aborted because:%v", err)
 				return
 			}
-			if err := model.FileRemove(targetFilename); err != nil {
+			if err := transport.FileRemove(targetFilename); err != nil {
 				model.Fatalf("remove failed, aborted because:%v", err)
 				return
 			}
@@ -87,8 +88,8 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	}
 	// Compress into new artifact
 	location := filepath.Join(destination, a.StorageBase())
-	if model.IsTargz("." + a.Type) {
-		if err := model.Targz(destination, location); err != nil {
+	if transport.IsTargz("." + a.Type) {
+		if err := transport.Targz(destination, location); err != nil {
 			model.Fatalf("tar compress failed, aborted because:%v", err)
 			return
 		}

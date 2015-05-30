@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/emicklei/artreyu/model"
+	"github.com/emicklei/artreyu/transport"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,7 @@ type Fetch struct {
 func (f Fetch) Perform() bool {
 	// check if destination is directory
 	var regular string = f.Destination
-	if model.IsDirectory(f.Destination) {
+	if transport.IsDirectory(f.Destination) {
 		regular = filepath.Join(f.Destination, f.Artifact.StorageBase())
 	}
 
@@ -32,14 +33,14 @@ func (f Fetch) Perform() bool {
 		return false
 	}
 
-	if f.AutoExtract && model.IsTargz(regular) {
-		if err := model.Untargz(regular, filepath.Dir(regular)); err != nil {
+	if f.AutoExtract && transport.IsTargz(regular) {
+		if err := transport.Untargz(regular, filepath.Dir(regular)); err != nil {
 			if f.ExitOnError {
 				model.Fatalf("fetch failed, unable to extract artifact: %v", err)
 			}
 			return false
 		}
-		if err := model.FileRemove(regular); err != nil {
+		if err := transport.FileRemove(regular); err != nil {
 			if f.ExitOnError {
 				model.Fatalf("fetch failed, unable to remove compressed artifact: %v", err)
 			}
