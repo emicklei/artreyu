@@ -58,8 +58,11 @@ func HttpPostFile(sourceFilename, destinationURL string) error {
 		"--upload-file",
 		sourceFilename,
 		destinationURL)
+	if model.Verbose {
+		model.Printf("%v", cmd.Args)
+	}
 	data, err := cmd.CombinedOutput()
-	if err != nil {
+	if err != nil || model.Verbose {
 		model.Printf("%s", string(data))
 	}
 	return err

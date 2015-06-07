@@ -40,6 +40,8 @@ See https://github.com/emicklei/artreyu for more details.
 	}
 	applicationSettings = command.NewSettingsBoundToFlags(rootCmd)
 	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		// TODO refactor this
+		model.Verbose = applicationSettings.Verbose
 		if applicationSettings.Verbose {
 			dir, _ := os.Getwd()
 			model.Printf("working directory = [%s]", dir)
