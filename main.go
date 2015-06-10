@@ -57,6 +57,13 @@ See https://github.com/emicklei/artreyu for more details.
 		if err != nil {
 			model.Fatalf("archive failed, invalid artifact: %v", err)
 		}
+		descriptorArtifact := model.Artifact{
+			Api:   artifact.Api,
+			AnyOS: artifact.AnyOS,
+			Group: artifact.Group,
+			Name:  "artreyu",
+			Type:  "yaml",
+		}
 		repoName := applicationSettings.TargetRepository
 		// put versions in local repo.
 		// put snapshots in local store if local is target
@@ -67,8 +74,19 @@ See https://github.com/emicklei/artreyu for more details.
 				Source:      args[0],
 				ExitOnError: false,
 			}
-			if archive.Perform() {
+			ok := archive.Perform()
+			if ok {
 				model.Printf("... stored artifact in local cache")
+				// now store the descriptor
+				descArchive := command.Archive{
+					Artifact:    descriptorArtifact,
+					Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
+					Source:      applicationSettings.ArtifactConfigLocation,
+					ExitOnError: false,
+				}
+				if descArchive.Perform() {
+					model.Printf("... stored descriptor in local cache")
+				}
 			} else {
 				model.Printf("[WARN] unable to store artifact in local cache")
 			}
@@ -80,6 +98,10 @@ See https://github.com/emicklei/artreyu for more details.
 		// not local, no archive specific flags to add
 		if err := command.RunPluginWithArtifact("artreyu-"+repoName, "archive", artifact, *applicationSettings, args); err != nil {
 			model.Fatalf("archive failed, could not run plugin: %v", err)
+		} else {
+			// now store the descriptor. replace the source in args
+			args[0] = applicationSettings.ArtifactConfigLocation
+			command.RunPluginWithArtifact("artreyu-"+repoName, "archive", descriptorArtifact, *applicationSettings, args)
 		}
 	}
 	rootCmd.AddCommand(archive)
@@ -91,14 +113,14 @@ See https://github.com/emicklei/artreyu for more details.
 			model.Fatalf("fetch failed, unable to load artifact: %v", err)
 		}
 		repoName := applicationSettings.TargetRepository
+		var destination = "."
+		if len(args) > 0 {
+			destination = args[0]
+		}
 		// versions may be in local store
 		// snapshots are in local store if target is set to local
 		fetched := false
 		if !artifact.IsSnapshot() || "local" == repoName {
-			var destination = "."
-			if len(args) > 0 {
-				destination = args[0]
-			}
 			fetch := command.Fetch{
 				Artifact:    artifact,
 				Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
@@ -122,6 +144,19 @@ See https://github.com/emicklei/artreyu for more details.
 		// not local
 		if err := command.RunPluginWithArtifact("artreyu-"+repoName, "fetch", artifact, *applicationSettings, extendedArgs); err != nil {
 			model.Fatalf("fetch failed, could not run plugin:  %v", err)
+		} else {
+			// remote fetching succeeded, store a copy of a version in local
+			if !artifact.IsSnapshot() {
+				archive := command.Archive{
+					Artifact:    artifact,
+					Repository:  local.NewRepository(model.RepositoryConfigNamed(applicationSettings, "local"), applicationSettings.OS),
+					Source:      destination,
+					ExitOnError: false,
+				}
+				if archive.Perform() {
+					model.Printf("... stored copy in local cache")
+				}
+			}
 		}
 	}
 	rootCmd.AddCommand(fetch)

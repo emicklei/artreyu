@@ -29,6 +29,9 @@ type Artifact struct {
 
 // StorageBase returns the file name to which the artifact is stored.
 func (a Artifact) StorageBase() string {
+	if len(a.Version) == 0 {
+		return fmt.Sprintf("%s.%s", a.Name, a.Type)
+	}
 	return fmt.Sprintf("%s-%s.%s", a.Name, a.Version, a.Type)
 }
 
