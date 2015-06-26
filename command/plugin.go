@@ -71,6 +71,11 @@ func NewPluginCommand() (*cobra.Command, *model.Settings, *model.Artifact) {
 		"t",
 		"",
 		"type (extension) of the artifact")
+	cmd.PersistentFlags().StringVarP(&artifact.OverrideStorageBase,
+		"base",
+		"b",
+		"",
+		"actual (overriden) filename of the artifact")
 	cmd.PersistentFlags().BoolVarP(&artifact.AnyOS,
 		"any-os",
 		"y",

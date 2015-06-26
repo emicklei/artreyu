@@ -26,13 +26,13 @@ type Artifact struct {
 	// If true then use "any" for the operating system name when archiving/fetching.
 	AnyOS bool `yaml:"any-os"`
 	// if not empty use this value for the actual storage file
-	storageBaseOverride string
+	OverrideStorageBase string
 }
 
 // StorageBase returns the file name to which the artifact is stored.
 func (a Artifact) StorageBase() string {
-	if len(a.storageBaseOverride) > 0 {
-		return a.storageBaseOverride
+	if len(a.OverrideStorageBase) > 0 {
+		return a.OverrideStorageBase
 	}
 	if len(a.Version) == 0 {
 		return fmt.Sprintf("%s.%s", a.Name, a.Type)
@@ -42,7 +42,7 @@ func (a Artifact) StorageBase() string {
 
 // UseStorageBase is used to override the default format of the actual file to archive/fetch.
 func (a *Artifact) UseStorageBase(actualFilename string) {
-	a.storageBaseOverride = actualFilename
+	a.OverrideStorageBase = actualFilename
 }
 
 // StorageLocation returns the relative resource path to store the artifact.
@@ -94,6 +94,7 @@ func (a Artifact) PluginParameters() (params []string) {
 		"--artifact="+a.Name,
 		"--version="+a.Version,
 		"--type="+a.Type,
+		"--base="+a.OverrideStorageBase,
 		"--any-os="+strconv.FormatBool(a.AnyOS))
 }
 
