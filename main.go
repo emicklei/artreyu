@@ -58,12 +58,14 @@ See https://github.com/emicklei/artreyu for more details.
 			model.Fatalf("archive failed, invalid artifact: %v", err)
 		}
 		descriptorArtifact := model.Artifact{
-			Api:   artifact.Api,
-			AnyOS: artifact.AnyOS,
-			Group: artifact.Group,
-			Name:  "artreyu",
-			Type:  "yaml",
+			Api:     artifact.Api,
+			AnyOS:   artifact.AnyOS,
+			Group:   artifact.Group,
+			Name:    artifact.Name,
+			Version: artifact.Version,
+			Type:    artifact.Type,
 		}
+		descriptorArtifact.UseStorageBase("artreyu.yaml")
 		repoName := applicationSettings.TargetRepository
 		// put versions in local repo.
 		// put snapshots in local store if local is target
