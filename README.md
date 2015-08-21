@@ -93,6 +93,17 @@ The format subcommand can be used to print information about the descriptor (art
 	
 	doc-2.0.tgz
 	
+### Tree of components	
+	
+The tree subcommand will recursively retrieve the artreyu descriptors to construct and print a composition hierarchy.
+
+	artreyu tree
+	
+	root-commponent-2.0
+	|-- child-1.0.tgz
+	|-- another-2.9.tgz
+	|  |-- sub.1.0.tgz
+	
 ### Local caching artifacts
 
 Versioned artifacts are cached using the local repository (filesystem).
