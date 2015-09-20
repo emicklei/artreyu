@@ -130,4 +130,8 @@ Default location for this configuration file is $HOME. You can override the loca
 	  user: 	admin
 	  password:	****  
 	
+### Installation from source
+
+	VERSION=latest make local	
+	
 (c)2015, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)
