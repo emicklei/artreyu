@@ -84,16 +84,6 @@ func NewPluginCommand() (*cobra.Command, *model.Settings, *model.Artifact) {
 	return cmd, NewSettingsBoundToFlags(cmd), artifact
 }
 
-// RunPlugin starts an external program with parameters from settings and artifacts loaded via settings and extra cli arguments.
-func RunPlugin(programName, subCommand string, settings model.Settings, args []string) error {
-	a, err := model.LoadArtifact(settings.ArtifactConfigLocation)
-	if err != nil {
-		model.Fatalf("invalid artifact descriptor:%v", err)
-		return nil
-	}
-	return RunPluginWithArtifact(programName, subCommand, a, settings, args)
-}
-
 // RunPluginWithArtifact starts an external program with parameters from settings,artifacts and extra cli arguments.
 func RunPluginWithArtifact(programName, subCommand string, artifact model.Artifact, settings model.Settings, args []string) error {
 	params := append([]string{subCommand}, settings.PluginParameters()...)

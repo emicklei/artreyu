@@ -94,4 +94,44 @@ func TestAssemble(t *testing.T) {
 	if !transport.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz") {
 		t.Fail()
 	}
+	transport.FileRemove("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz")
+}
+
+func TestAssembleZip(t *testing.T) {
+	setup(t)
+
+	rootCmd.SetArgs([]string{
+		"archive",
+		"testdata/LoremIpsum.txt",
+		"--config=testdata/local-config.yaml",
+		"--descriptor=testdata/LoremIpsum.yaml",
+		"--verbose=true",
+		"--os=test"})
+	rootCmd.Execute()
+
+	setup(t)
+	rootCmd.SetArgs([]string{
+		"archive",
+		"testdata/doc.tgz",
+		"--config=testdata/local-config.yaml",
+		"--descriptor=testdata/artreyu.yaml",
+		"--verbose=true",
+		"--os=test"})
+	rootCmd.Execute()
+
+	setup(t)
+	tmp := filepath.Join(os.TempDir(), "artreyu")
+	rootCmd.SetArgs([]string{
+		"assemble",
+		tmp,
+		"--config=testdata/local-config.yaml",
+		"--descriptor=testdata/assembly-zip.yaml",
+		"--verbose=true",
+		"--os=test"})
+	rootCmd.Execute()
+
+	if !transport.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.zip") {
+		t.Fail()
+	}
+	transport.FileRemove("/tmp/artreyu/com/company/assembly/2/test/assembly-2.zip")
 }

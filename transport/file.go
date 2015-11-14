@@ -69,6 +69,10 @@ func IsTargz(filenameOrExtension string) bool {
 		strings.HasSuffix(filenameOrExtension, ".tgz")
 }
 
+func IsZip(filenameOrExtension string) bool {
+	return strings.HasSuffix(filenameOrExtension, ".zip")
+}
+
 func Targz(sourceDir, destinationFile string) error {
 	model.Printf("compress into tape archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
@@ -95,6 +99,35 @@ func Untargz(sourceFile, destinationDir string) error {
 		"xvf",
 		sourceFile,
 		"-C",
+		destinationDir)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func Zip(sourceDir, destinationFile string) error {
+	model.Printf("compress into zip archive [%s] from [%s]\n", destinationFile, sourceDir)
+	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
+	cmd, _ := asCommand(
+		"zip",
+		"-r",
+		tmp,
+		sourceDir)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+	// now move to destination
+	return os.Rename(tmp, destinationFile)
+}
+
+func Unzip(sourceFile, destinationDir string) error {
+	model.Printf("decompress from zip archive [%s] to [%s]\n", sourceFile, destinationDir)
+	cmd, _ := asCommand(
+		"unzip",
+		sourceFile,
+		"-d",
 		destinationDir)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -32,6 +32,7 @@ func (c Config) Named(name string) (RepositoryConfig, error) {
 
 type RepositoryConfig struct {
 	Name       string
+	Plugin     string
 	URL        string
 	Path       string
 	User       string

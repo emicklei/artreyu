@@ -2,7 +2,8 @@ api:			1
 repositories:
 - name:		local
   path:     "/tmp/Artreyu"
-- name:		nexus
+- name:		nexus-repos
+  plugin:  nexus
   url:		https://here.com/nexus
   path:     /content/repositories
   user: 	"!"

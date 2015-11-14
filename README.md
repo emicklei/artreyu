@@ -44,7 +44,7 @@ Unless run with the flag `--repository` or `-r`, the artifacts are stored only o
 
 Artreyu uses a simple plugin architecture to support other repository types. For example, the `artreyu-nexus` program is called to store and fetch artifacts from a Sonatype Nexus repository.  See [artreyu-nexus](https://github.com/emicklei/artreyu-nexus). To store an artifact in Nexus, you run:
 
-	artreyu archive -r nexus target/my-app.tgz
+	artreyu archive -r nexus-root target/my-app.tgz
 
 
 ### Assemble a new artifact
@@ -74,8 +74,7 @@ When running the "assemble" command.
 
 	artreyu assemble
 	
-Then the parts are downloaded to a temporary directory, the parts are extracted,
-all content is compressed again into a new artifact and then the new artifact is stored. 
+Then the parts are downloaded to a temporary directory, the parts are extracted, all content is compressed again into a new artifact and then the new artifact is stored. 
 You can override the temporary directory explicitly by appending its name to the command line, e.g. `artreyu assemble target`
 
 	target/
@@ -87,7 +86,9 @@ You can override the temporary directory explicitly by appending its name to the
 	
 ### Print descriptor details
 
-The format subcommand can be used to print information about the descriptor (artifact or assembly). The format command requires a template using the Go syntax. See [http://golang.org/pkg/text/template/](http://golang.org/pkg/text/template/)
+The format subcommand can be used to print information about the descriptor (artifact or assembly). 
+The format command requires a template using the Go syntax. 
+See [http://golang.org/pkg/text/template/](http://golang.org/pkg/text/template/)
 
 	artreyu format "{{.Name}}-{{.Version}}.{{.Type}}"
 	
@@ -107,11 +108,9 @@ The tree subcommand will recursively retrieve the artreyu descriptors to constru
 ### Local caching artifacts
 
 Versioned artifacts are cached using the local repository (filesystem).
-Archiving a version of an artifact will put it in the local repository
-after storing it on a remote (using a plugin).
+Archiving a version of an artifact will put it in the local repository after storing it on a remote (using a plugin).
 Fetching the version of an artifact will first try to get it from the local repository.
-If that fails then the remote repository is used. If that succeeds, a copy of the artifact is put 
-in the local repository.
+If that fails then the remote repository is used. If that succeeds, a copy of the artifact is put in the local repository.
 If the target repository is set to `local` then both versions and snapshots are store locally.
 An artifact is called a snapshot if the Version property has the substring "SNAPSHOT".
 	
@@ -124,7 +123,8 @@ Default location for this configuration file is $HOME. You can override the loca
 	- name:		local
 	  path:     /Users/you/artreyu	
 
-	- name:		nexus
+	- name:		nexus-root
+	  plugin:  nexus
 	  url:		https://yours.com/nexus
 	  path:     /content/repositories
 	  user: 	admin
@@ -132,6 +132,6 @@ Default location for this configuration file is $HOME. You can override the loca
 	
 ### Installation from source
 
-	VERSION=latest make local	
+	VERSION=latest make here	
 	
 (c)2015, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)

@@ -15,5 +15,6 @@ func TestLoadConfig(t *testing.T) {
 	assert.That(t, "url", nexus.URL).Equals("https://here.com/nexus")
 	assert.That(t, "path", nexus.Path).Equals("/content/repositories")
 	assert.That(t, "user", nexus.User).Equals("!")
+	assert.That(t, "plugin", nexus.Plugin).Equals("nexus")
 	assert.That(t, "password", nexus.Password).Equals("*")
 }

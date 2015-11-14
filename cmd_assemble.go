@@ -74,8 +74,16 @@ func doAssemble(cmd *cobra.Command, args []string) {
 				}
 			}
 		}
-		// TODO.zip
-		if transport.IsTargz(targetFilename) {
+		if transport.IsZip(targetFilename) {
+			if err := transport.Unzip(targetFilename, destination); err != nil {
+				model.Fatalf("zip decompress failed, aborted because:%v", err)
+				return
+			}
+			if err := transport.FileRemove(targetFilename); err != nil {
+				model.Fatalf("remove failed, aborted because:%v", err)
+				return
+			}
+		} else if transport.IsTargz(targetFilename) {
 			if err := transport.Untargz(targetFilename, destination); err != nil {
 				model.Fatalf("tar extract failed, aborted because:%v", err)
 				return
@@ -93,7 +101,13 @@ func doAssemble(cmd *cobra.Command, args []string) {
 			model.Fatalf("tar compress failed, aborted because:%v", err)
 			return
 		}
+	} else if transport.IsZip("." + a.Type) {
+		if err := transport.Zip(destination, location); err != nil {
+			model.Fatalf("zip compress failed, aborted because:%v", err)
+			return
+		}
 	}
+
 	// Archive new artifact
 	target := applicationSettings.TargetRepository
 	if "local" == target {
