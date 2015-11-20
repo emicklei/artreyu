@@ -7,7 +7,7 @@ Each of the components or parts may have been build by a separate continuous bui
 have their own version lifecycle and may be platform specific. 
 
 Artreyu can be used to realize a continuous product build job that assembles artifacts which are stored in an artifact repository.
-The tool uses descriptor files that contain meta data about the artifact (e.g. version,name,type). To support assembly, a descriptor will have to list the part descriptors needed for creating the container artifact.
+The tool uses descriptor files that contain meta data about the artifact (e.g. version,name,type). To support assembly, a descriptor will have a list of descriptors needed for creating the container artifact.
 
 The design of this tool is inspired by the Apache Maven project which provides assembly support for Java projects. Compared to the Maven repository layout, Artreyu uses the OS name in the container path to support platform specific artifacts.
 
@@ -84,6 +84,10 @@ You can override the temporary directory explicitly by appending its name to the
 		ui-app.html
 		ui-app.js
 	
+#### Compression
+
+Artreyu can handle archives with `tgz`,`tar.gz` (both require tar program) and `zip`(built-in).
+	
 ### Print descriptor details
 
 The format subcommand can be used to print information about the descriptor (artifact or assembly). 
@@ -134,4 +138,4 @@ Default location for this configuration file is $HOME. You can override the loca
 
 	VERSION=latest make here	
 	
-(c)2015, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)
+&copy; 2015, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)
