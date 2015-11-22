@@ -25,10 +25,8 @@ func Exists(loc string) bool {
 	return err == nil
 }
 
-// Cp copy a file (src) to new file (dst).
-// Dst is the full directory path and file name
-// Src can be a relative directory path and file name
-func Cp(dst, src string) error {
+// Copy does what is says. Ignores errors on Close though.
+func Copy(dst, src string) error {
 	cleanSrc, err := filepath.Abs(path.Clean(src))
 	if err != nil {
 		return err
@@ -37,21 +35,13 @@ func Cp(dst, src string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(cleanDst), os.ModePerm); err != nil {
-		return err
-	}
-	model.Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
-	return exec.Command("cp", cleanSrc, cleanDst).Run()
-}
 
-// Copy does what is says. Ignores errors on Close though.
-func Copy(dst, src string) error {
-	in, err := os.Open(src)
+	in, err := os.Open(cleanSrc)
 	if err != nil {
 		return err
 	}
 	defer in.Close()
-	out, err := os.Create(dst)
+	out, err := os.Create(cleanDst)
 	if err != nil {
 		return err
 	}
@@ -61,6 +51,7 @@ func Copy(dst, src string) error {
 	if err != nil {
 		return err
 	}
+	model.Printf("copy [%s] to [%s]", cleanSrc, cleanDst)
 	return cerr
 }
 
@@ -108,14 +99,7 @@ func Untargz(sourceFile, destinationDir string) error {
 func Zip(sourceDir, destinationFile string) error {
 	model.Printf("compress into zip archive [%s] from [%s]\n", destinationFile, sourceDir)
 	tmp := filepath.Join(os.TempDir(), filepath.Base(destinationFile))
-	cmd, _ := asCommand(
-		"zip",
-		"-r",
-		tmp,
-		sourceDir)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
+	if err := createZip(sourceDir, tmp); err != nil {
 		return err
 	}
 	// now move to destination
@@ -124,14 +108,7 @@ func Zip(sourceDir, destinationFile string) error {
 
 func Unzip(sourceFile, destinationDir string) error {
 	model.Printf("decompress from zip archive [%s] to [%s]\n", sourceFile, destinationDir)
-	cmd, _ := asCommand(
-		"unzip",
-		sourceFile,
-		"-d",
-		destinationDir)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	return extractZip(sourceFile, destinationDir)
 }
 
 func FileRemove(source string) error {

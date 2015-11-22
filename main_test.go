@@ -97,6 +97,7 @@ func TestAssemble(t *testing.T) {
 	transport.FileRemove("/tmp/artreyu/com/company/assembly/2/test/assembly-2.tgz")
 }
 
+// clear && go test -v -test.run=TestAssembleZip
 func TestAssembleZip(t *testing.T) {
 	setup(t)
 
@@ -133,5 +134,5 @@ func TestAssembleZip(t *testing.T) {
 	if !transport.IsRegular("/tmp/artreyu/com/company/assembly/2/test/assembly-2.zip") {
 		t.Fail()
 	}
-	transport.FileRemove("/tmp/artreyu/com/company/assembly/2/test/assembly-2.zip")
+	//transport.FileRemove("/tmp/artreyu/com/company/assembly/2/test/assembly-2.zip")
 }

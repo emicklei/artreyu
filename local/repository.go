@@ -24,7 +24,7 @@ func (r Repository) ID() string { return "local" }
 // Store copies the file (source) to a local directory and name indicated by the artifact
 func (r Repository) Store(a model.Artifact, source string) error {
 	dest := a.StorageLocation(r.osname, a.AnyOS)
-	return transport.Cp(filepath.Join(r.config.Path, dest), source)
+	return transport.Copy(filepath.Join(r.config.Path, dest), source)
 }
 
 // Fetch copies the file indicated by the artifact to a destination file/directory.
@@ -33,7 +33,7 @@ func (r Repository) Fetch(a model.Artifact, destination string) error {
 	if !transport.Exists(src) {
 		return fmt.Errorf("no such file [%s]", src)
 	}
-	return transport.Cp(destination, src)
+	return transport.Copy(destination, src)
 }
 
 // Exists returns true if the repository holds the artifact file.

@@ -23,6 +23,7 @@ func (a Archive) Perform() bool {
 		if a.ExitOnError {
 			model.Fatalf("unable to upload artifact:%v", err)
 		}
+		model.Printf("store failed because:%v", err)
 		return false
 	}
 	return true

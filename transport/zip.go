@@ -2,6 +2,7 @@ package transport
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -56,11 +57,9 @@ func extractZip(src, dest string) error {
 	return nil
 }
 
-func excludeNone(s string) { return false }
-func includeAll(s string)  { return true }
-
 // http://blog.ralch.com/tutorial/golang-working-with-zip/
-func makeZip(source, target string, excludeFromZip, includeInZip func(string) bool) error {
+// source must be a folder
+func createZip(source, target string) error {
 	zipfile, err := os.Create(target)
 	if err != nil {
 		return err
@@ -70,28 +69,12 @@ func makeZip(source, target string, excludeFromZip, includeInZip func(string) bo
 	archive := zip.NewWriter(zipfile)
 	defer archive.Close()
 
-	info, err := os.Stat(source)
+	_, err = os.Stat(source)
 	if err != nil {
-		return nil
-	}
-
-	var baseDir string
-	if info.IsDir() {
-		baseDir = filepath.Base(source)
+		return err
 	}
 
 	filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
-		if path == "." {
-			return nil
-		}
-		if excludeFromZip(path) {
-			return nil
-		}
-
-		if !includeInZip(path) {
-			return nil
-		}
-
 		if err != nil {
 			return err
 		}
@@ -101,8 +84,10 @@ func makeZip(source, target string, excludeFromZip, includeInZip func(string) bo
 			return err
 		}
 
-		if baseDir != "" {
-			header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
+		fmt.Println(path, header.Name)
+
+		if header.Name == filepath.Base(source) {
+			return nil
 		}
 
 		if info.IsDir() {
