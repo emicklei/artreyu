@@ -7,12 +7,12 @@ import (
 	"os"
 )
 
-func HttpGetFile(sourceURL, destinationFilename string) error {
+func HttpGetFile(client *http.Client, sourceURL, destinationFilename string) error {
 	req, err := http.NewRequest("GET", sourceURL, nil)
 	if err != nil {
 		return err
 	}
-	resp, err := new(http.Client).Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
