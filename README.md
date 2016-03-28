@@ -42,10 +42,19 @@ Unless run with the flag `--repository` or `-r`, the artifacts are stored only o
 
 ### Plugin commands
 
-Artreyu uses a simple plugin architecture to support other repository types. For example, the `artreyu-nexus` program is called to store and fetch artifacts from a Sonatype Nexus repository.  See [artreyu-nexus](https://github.com/emicklei/artreyu-nexus). To store an artifact in Nexus, you run:
+Artreyu uses a simple plugin architecture to support other repository types. 
+
+For example, the `artreyu-gcs` program is called to store and fetch artifacts from a Google Cloud Storage (GCS) bucket as a repository.  See [artreyu-google-cloud-storage](https://github.com/emicklei/artreyu-google-cloud-storage). To store an artifact in GCS, you run:
+
+	artreyu archive -r gcs-root target/my-app.tgz
+	
+Note: `gcs-root` is the name of a repository for you to define in the configuration `.artreyu` (see below).
+
+For example, the `artreyu-nexus` program is called to store and fetch artifacts from a Sonatype Nexus repository.  See [artreyu-nexus](https://github.com/emicklei/artreyu-nexus). To store an artifact in Nexus, you run:
 
 	artreyu archive -r nexus-root target/my-app.tgz
 
+Note: `nexus-root` is the name of a repository for you to define in the configuration `.artreyu` (see below).
 
 ### Assemble a new artifact
 
@@ -128,14 +137,20 @@ Default location for this configuration file is $HOME. You can override the loca
 	  path:     /Users/you/artreyu	
 
 	- name:		nexus-root
-	  plugin:  nexus
+	  plugin:   nexus
 	  url:		https://yours.com/nexus
 	  path:     /content/repositories
-	  user: 	admin
+	  user: 	    admin
 	  password:	****  
+
+	- name:		gcs-root
+	  plugin:   gcs
+	  bucket:	yours_assets
+	  path:     /
+
 	
 ### Installation from source
 
-	VERSION=latest make here	
+	VERSION=latest make local	
 	
-&copy; 2015, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)
+&copy; 2015-2016, MIT License, [http://ernestmicklei.com](http://ernestmicklei.com)

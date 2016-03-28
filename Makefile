@@ -1,8 +1,8 @@
-here:
-	go build -ldflags "-X main.VERSION '${VERSION}' -X main.BUILDDATE `date -u +%Y:%m:%d.%H:%M:%S`" -o $(GOPATH)/bin/artreyu
+local:
+	go build -ldflags "-X main.VERSION='${VERSION}' -X main.BUILDDATE=`date -u +%Y:%m:%d.%H:%M:%S`" -o $(GOPATH)/bin/artreyu
 
 build:
-	go build -ldflags "-X main.VERSION '${VERSION}' -X main.BUILDDATE `date -u +%Y:%m:%d.%H:%M:%S`" -o /target/artreyu *.go
+	go build -ldflags "-X main.VERSION='${VERSION}' -X main.BUILDDATE=`date -u +%Y:%m:%d.%H:%M:%S`" -o /target/artreyu *.go
 	
 dockerbuild:
 	docker build --no-cache=true -t artreyu-builder .	
