@@ -1,4 +1,4 @@
 api:			1
 repositories:
 - name:		local
-  path:     /tmp/artreyu
+  path:     ./testdata

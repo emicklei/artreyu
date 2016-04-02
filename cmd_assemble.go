@@ -46,6 +46,10 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	for _, each := range a.Parts {
 		targetFilename := filepath.Join(destination, each.StorageBase())
 		repoName := applicationSettings.TargetRepository
+		// is the part specifies a repository then use that one
+		if len(each.RepositoryName) > 0 {
+			repoName = each.RepositoryName
+		}
 		if "local" == repoName {
 			if err := localRepository(applicationSettings).Fetch(each, targetFilename); err != nil {
 				model.Fatalf("fetching artifact failed, aborted because:%v", err)

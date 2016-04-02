@@ -26,7 +26,7 @@ func TestArchive(t *testing.T) {
 		"--os=test"})
 	rootCmd.Execute()
 
-	if !transport.Exists("/tmp/artreyu/com/company/LoremIpsum/1.0-SNAPSHOT/test/LoremIpsum-1.0-SNAPSHOT.txt") {
+	if !transport.Exists("testdata/com/company/LoremIpsum/1.0-SNAPSHOT/test/LoremIpsum-1.0-SNAPSHOT.txt") {
 		t.Fail()
 	}
 }
