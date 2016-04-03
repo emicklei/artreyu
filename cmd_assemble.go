@@ -48,6 +48,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 		repoName := applicationSettings.TargetRepository
 		// is the part specifies a repository then use that one
 		if len(each.RepositoryName) > 0 {
+			model.Printf("artifact %s is located in repository named %s", each.Name, each.RepositoryName)
 			repoName = each.RepositoryName
 		}
 		if "local" == repoName {
@@ -67,7 +68,7 @@ func doAssemble(cmd *cobra.Command, args []string) {
 			// snapshot or not local
 			pluginName := model.RepositoryConfigNamed(applicationSettings, repoName).Plugin
 			if !fetched {
-				if err := command.RunPluginWithArtifact("artreyu-"+pluginName, "fetch", each, *applicationSettings, args); err != nil {
+				if err := command.RunPluginWithArtifact("artreyu-"+pluginName, "fetch", each, (*applicationSettings).WithRepositoryNamed(repoName), args); err != nil {
 					model.Fatalf("fetching artifact failed, aborted because:%v", err)
 					return
 				}
