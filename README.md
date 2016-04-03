@@ -11,6 +11,8 @@ The tool uses descriptor files that contain meta data about the artifact (e.g. v
 
 The design of this tool is inspired by the Apache Maven project which provides assembly support for Java projects. Compared to the Maven repository layout, Artreyu uses the OS name in the container path to support platform specific artifacts.
 
+[![Build Status](https://travis-ci.org/emicklei/artreyu.png)](https://travis-ci.org/emicklei/artreyu)
+
 ### Archive a build result
 
 Given the artifact descriptor artreyu.yaml

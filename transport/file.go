@@ -27,6 +27,7 @@ func Exists(loc string) bool {
 
 // Copy does what is says. Ignores errors on Close though.
 func Copy(dst, src string) error {
+	os.MkdirAll(filepath.Dir(dst), os.ModePerm)
 	cleanSrc, err := filepath.Abs(path.Clean(src))
 	if err != nil {
 		return err
