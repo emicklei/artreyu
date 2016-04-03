@@ -65,8 +65,9 @@ func doAssemble(cmd *cobra.Command, args []string) {
 				}
 			}
 			// snapshot or not local
+			pluginName := model.RepositoryConfigNamed(applicationSettings, repoName).Plugin
 			if !fetched {
-				if err := command.RunPluginWithArtifact("artreyu-"+repoName, "fetch", each, *applicationSettings, args); err != nil {
+				if err := command.RunPluginWithArtifact("artreyu-"+pluginName, "fetch", each, *applicationSettings, args); err != nil {
 					model.Fatalf("fetching artifact failed, aborted because:%v", err)
 					return
 				}
@@ -113,14 +114,15 @@ func doAssemble(cmd *cobra.Command, args []string) {
 	}
 
 	// Archive new artifact
-	target := applicationSettings.TargetRepository
-	if "local" == target {
+	repoName := applicationSettings.TargetRepository
+	if "local" == repoName {
 		if err := localRepository(applicationSettings).Store(a.Artifact, location); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}
 	} else {
-		if err := command.RunPluginWithArtifact("artreyu-"+target, "archive", a.Artifact, *applicationSettings, []string{location}); err != nil {
+		pluginName := model.RepositoryConfigNamed(applicationSettings, repoName).Plugin
+		if err := command.RunPluginWithArtifact("artreyu-"+pluginName, "archive", a.Artifact, *applicationSettings, []string{location}); err != nil {
 			model.Fatalf("archiving new artifact failed, aborted because:%v", err)
 			return
 		}

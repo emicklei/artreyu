@@ -28,7 +28,7 @@ type Artifact struct {
 	// if not empty use this value for the actual storage file
 	OverrideStorageBase string
 	// optionally specify the repository to archive/fetch this artifact
-	RepositoryName string `yam:"repository`
+	RepositoryName string `yaml:"repository`
 }
 
 // StorageBase returns the file name to which the artifact is stored.
