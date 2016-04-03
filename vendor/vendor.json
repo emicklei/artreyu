@@ -3,9 +3,19 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "github.com/emicklei/assert",
+			"revision": "46e82977cb23755b554e942ee80fff37dd773ba3",
+			"revisionTime": "2016-01-19T12:32:49+01:00"
+		},
+		{
 			"path": "github.com/spf13/cobra",
 			"revision": "8e91712f174ced10270cf66615e0a9127e7c4de5",
 			"revisionTime": "2016-01-16T22:09:38-05:00"
+		},
+		{
+			"path": "github.com/spf13/pflag",
+			"revision": "7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7",
+			"revisionTime": "2015-10-24T12:54:09+02:00"
 		},
 		{
 			"path": "gopkg.in/yaml.v2",
