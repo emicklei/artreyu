@@ -18,6 +18,11 @@
 			"revisionTime": "2015-10-24T12:54:09+02:00"
 		},
 		{
+			"path": "github.com/wsxiaoys/terminal/color",
+			"revision": "9dcaf1d63119a8ac00eef82270eaef08b6aa2328",
+			"revisionTime": "2014-05-17T00:35:22+08:00"
+		},
+		{
 			"path": "gopkg.in/yaml.v2",
 			"revision": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4",
 			"revisionTime": "2015-12-01T14:27:45-02:00"
