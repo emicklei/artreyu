@@ -18,6 +18,14 @@ func Test_LoadArtifactFromAssemblyFile(t *testing.T) {
 	assert.That(t, "artifact name", a.Name).Equals("company-linux-sdk")
 }
 
+func Test_LoadAssembleFromAssemblyFile(t *testing.T) {
+	a, err := LoadAssembly("test-assembly.yaml")
+	assert.That(t, "load err", err).IsNil()
+	assert.That(t, "artifact name", a.Name).Equals("company-linux-sdk")
+	assert.That(t, "0.repository", a.Parts[0].RepositoryName).Len(0)
+	assert.That(t, "1.repository", a.Parts[1].RepositoryName).Equals("other")
+}
+
 func Test_LoadAssemblyFromArtifactFile(t *testing.T) {
 	a, err := LoadAssembly("test-artifact.yaml")
 	assert.That(t, "load err", err).IsNil()

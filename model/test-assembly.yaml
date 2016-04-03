@@ -14,3 +14,4 @@ parts:
   artifact: myapp2
   version: 2.0-SNAPSHOT
   type: tgz
+  repository: other
